@@ -32,5 +32,21 @@ def get_input():
         print(f"Error: {str(e)}")
         return jsonify({"success": False, "message": "Error processing data"})
 
+@app.route('/getpdf', methods=['POST'])
+def get_pdf():
+    try:
+        pdf_file = request.files.get('pdf')
+
+        if pdf_file:
+            pdf_file.save(os.path.join(os.getcwd(), 'uploaded_pdf.pdf'))
+            print('PDF file saved successfully')
+
+            return jsonify({"success": True, "message": "PDF received and saved successfully"})
+
+    except Exception as e:
+        print(f"Error: {str(e)}")
+
+    return jsonify({"success": False, "message": "Error processing PDF"})
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

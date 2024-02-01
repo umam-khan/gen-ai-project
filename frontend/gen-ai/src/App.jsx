@@ -3,6 +3,7 @@ import { useState } from "react";
 
 import AudioRecorder from "../src/AudioRecorder";
 import TextInput from "./TextInput";
+import PdfUpload from "./PdfUpload";
 
 const App = () => {
 	let [recordOption, setRecordOption] = useState("text");
@@ -32,6 +33,7 @@ const App = () => {
 	  return (
 		<div className="min-h-screen flex flex-col justify-center items-center space-y-5">
 		  <h1>Query Your PDF</h1>
+		  <PdfUpload />
 		  <div className="button-flex">
 			<button onClick={toggleRecordOption("text")}>Send Text</button>
 			<button onClick={toggleRecordOption("audio")}>Record Audio</button>
