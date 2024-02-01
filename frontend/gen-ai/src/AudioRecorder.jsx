@@ -48,42 +48,49 @@ const AudioRecorder = () => {
   };
 
   const stopRecording = async () => {
-	setRecordingStatus("inactive");
-	mediaRecorder.current.stop();
-  
-	mediaRecorder.current.onstop = async () => {
-	  const audioBlob = new Blob(audioChunks, { type: mimeType });
-	  const formData = new FormData();
-  
-	  formData.append("inputType", "audio");
-	  formData.append("language", selectedLanguage);
-	  formData.append("text", "NULL"); // Text input is NULL for audio recording
-	  formData.append("audio", audioBlob, "recordedAudio.weba");
-  
-	  sendDataToServer(formData);
-	};
+    setRecordingStatus("inactive");
+    mediaRecorder.current.stop();
+
+    mediaRecorder.current.onstop = async () => {
+      const audioBlob = new Blob(audioChunks, { type: mimeType });
+
+      // Convert the audioBlob to base64
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const audioBase64 = reader.result;
+
+        const formData = new FormData();
+        formData.append("inputType", "audio");
+        formData.append("language", selectedLanguage);
+        formData.append("text", "NULL");
+        formData.append("audio", audioBase64);
+
+        sendDataToServer(formData);
+      };
+
+      reader.readAsDataURL(audioBlob);
+    };
   };
-  
+
   const sendDataToServer = async (data) => {
-	try {
-	  const response = await fetch("http://localhost:5000/getinput", {
-		method: "POST",
-		body: data,
-	  });
-  
-	  if (response.ok) {
-		console.log("Data successfully sent to server");
-		console.log(data);
-	  } else {
-		console.error("Failed to send data to server");
-	  }
-	} catch (error) {
-	  console.error("Error sending data to server:", error);
-	}
-  
-	setAudioChunks([]);
+    try {
+      const response = await fetch("http://localhost:5000/getinput", {
+        method: "POST",
+        body: data,
+      });
+
+      if (response.ok) {
+        console.log("Data successfully sent to server");
+        console.log(data);
+      } else {
+        console.error("Failed to send data to server");
+      }
+    } catch (error) {
+      console.error("Error sending data to server:", error);
+    }
+
+    setAudioChunks([]);
   };
-  
 
   return (
     <div>
