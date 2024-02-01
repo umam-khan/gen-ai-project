@@ -7,7 +7,7 @@ app= Flask(__name__)
 
 CORS(app)
 
-@app.route('/getaudio', methods=['POST'])
+@app.route('/getinput', methods=['POST'])
 def receive_audio():
     try:
         audio_file = request.files['audio']

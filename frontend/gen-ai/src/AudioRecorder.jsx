@@ -48,34 +48,42 @@ const AudioRecorder = () => {
   };
 
   const stopRecording = async () => {
-    setRecordingStatus("inactive");
-    mediaRecorder.current.stop();
-
-    mediaRecorder.current.onstop = async () => {
-      const audioBlob = new Blob(audioChunks, { type: mimeType });
-      const formData = new FormData();
-
-      formData.append("audio", audioBlob, "recordedAudio.weba");
-      formData.append("language", selectedLanguage); // Add selected language
-
-      try {
-        const response = await fetch("http://localhost:5000/getinput", {
-          method: "POST",
-          body: formData,
-        });
-
-        if (response.ok) {
-          console.log("Audio successfully sent to server");
-        } else {
-          console.error("Failed to send audio to server");
-        }
-      } catch (error) {
-        console.error("Error sending audio to server:", error);
-      }
-
-      setAudioChunks([]);
-    };
+	setRecordingStatus("inactive");
+	mediaRecorder.current.stop();
+  
+	mediaRecorder.current.onstop = async () => {
+	  const audioBlob = new Blob(audioChunks, { type: mimeType });
+	  const formData = new FormData();
+  
+	  formData.append("inputType", "audio");
+	  formData.append("language", selectedLanguage);
+	  formData.append("text", "NULL"); // Text input is NULL for audio recording
+	  formData.append("audio", audioBlob, "recordedAudio.weba");
+  
+	  sendDataToServer(formData);
+	};
   };
+  
+  const sendDataToServer = async (data) => {
+	try {
+	  const response = await fetch("http://localhost:5000/getinput", {
+		method: "POST",
+		body: data,
+	  });
+  
+	  if (response.ok) {
+		console.log("Data successfully sent to server");
+		console.log(data);
+	  } else {
+		console.error("Failed to send data to server");
+	  }
+	} catch (error) {
+	  console.error("Error sending data to server:", error);
+	}
+  
+	setAudioChunks([]);
+  };
+  
 
   return (
     <div>
