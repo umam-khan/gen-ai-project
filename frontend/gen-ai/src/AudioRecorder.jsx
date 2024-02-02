@@ -54,20 +54,20 @@ const AudioRecorder = () => {
     mediaRecorder.current.onstop = async () => {
       const audioBlob = new Blob(audioChunks, { type: mimeType });
 
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const audioBase64 = reader.result;
+      // const reader = new FileReader();
+      // reader.onloadend = () => {
+        // const audioBase64 = reader.result;
 
         const formData = new FormData();
         formData.append("inputType", "audio");
         formData.append("language", selectedLanguage);
         formData.append("text", "NULL");
-        formData.append("audio", audioBase64);
+        formData.append("audio", audioBlob, "recordedAudio.weba");
 
         sendDataToServer(formData);
-      };
+      // };
 
-      reader.readAsDataURL(audioBlob);
+      // reader.readAsDataURL(audioBlob);
     };
   };
 

@@ -94,19 +94,10 @@ def getaudio():
         input_type = request.form.get('inputType')
         language = request.form.get('language')
         text = request.form.get('text')
-        audio_base64 = request.form.get('audio')
-
-        # Handle the data as needed
-        print(f'Language: {language}')
-        print(f'Audio:{audio_base64}')
-        # Save the audio to a file in the current folder
-        if input_type == 'audio' and audio_base64:
-            audio_binary = base64.b64decode(audio_base64.split(',')[1])
-            with open('recordedAudio.weba', 'wb') as audio_file:
-                audio_file.write(audio_binary)
-            print('Audio saved successfully')
-
-        return jsonify({"success": True, "message": "Data received successfully"})
+        audio_file = request.files['audio']
+        # Save the audio file to the current folder
+        audio_file.save(os.path.join(os.getcwd(), 'recordedAudio.weba'))
+        return 'Audio received and saved successfully', 200
 
     except Exception as e:
         print(f"Error: {str(e)}")
