@@ -31,7 +31,7 @@ const PdfUpload = () => {
   };
 
   return (
-    <div className="flex items-center justify-center w-full">
+    <div className="flex items-center justify-center w-64 sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5" >
       <label
         htmlFor="dropzone-file"
         className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
@@ -62,7 +62,7 @@ const PdfUpload = () => {
           )}
           {selectedFile && (
             <div>
-                <h2>pdf has been selected, pls press upload</h2>
+                <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">PDF selected, please upload</p>
             </div>
           )}
         </div>
@@ -72,13 +72,15 @@ const PdfUpload = () => {
           className="hidden"
           onChange={handleFileChange}
         />
-        <button
-          type="button"
-          onClick={handleFileUpload}
-          className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        >
-          Upload PDF
-        </button>
+        {selectedFile && (
+            <button
+            type="button"
+            onClick={handleFileUpload}
+            className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          >
+            Upload PDF
+          </button>
+        )}
       </label>
     </div>
   );

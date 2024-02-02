@@ -1,4 +1,4 @@
-#root {
+/* #root {
 	max-width: 1280px;
 	margin: 0 auto;
 	padding: 2rem;
@@ -15,8 +15,8 @@
 }
 .logo.react:hover {
 	filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
+} */
+/* 
 @keyframes logo-spin {
 	from {
 		transform: rotate(0deg);
@@ -38,8 +38,8 @@
 
 .read-the-docs {
 	color: #888;
-}
-:root {
+} */
+/* :root {
 	font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
 	font-size: 16px;
 	line-height: 24px;
@@ -54,8 +54,8 @@
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	-webkit-text-size-adjust: 100%;
-}
-
+} */
+/* 
 a {
 	font-weight: 500;
 	color: #646cff;
@@ -126,7 +126,7 @@ button:focus-visible {
 .recorded-player video {
 	height: 400px;
 	width: 800px;
-}
+} */
 
  @media (prefers-color-scheme: light) {
 	:root {

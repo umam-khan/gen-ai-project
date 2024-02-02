@@ -4,7 +4,7 @@ const mimeType = "audio/webm";
 
 const AudioRecorder = () => {
   const [permission, setPermission] = useState(false);
-  const [selectedLanguage, setSelectedLanguage] = useState("english"); // Default language is English
+  const [selectedLanguage, setSelectedLanguage] = useState("english");
   const mediaRecorder = useRef(null);
   const [recordingStatus, setRecordingStatus] = useState("inactive");
   const [stream, setStream] = useState(null);
@@ -54,7 +54,6 @@ const AudioRecorder = () => {
     mediaRecorder.current.onstop = async () => {
       const audioBlob = new Blob(audioChunks, { type: mimeType });
 
-      // Convert the audioBlob to base64
       const reader = new FileReader();
       reader.onloadend = () => {
         const audioBase64 = reader.result;
@@ -74,7 +73,7 @@ const AudioRecorder = () => {
 
   const sendDataToServer = async (data) => {
     try {
-      const response = await fetch("http://localhost:5000/getinput", {
+      const response = await fetch("http://localhost:5000/getaudio", {
         method: "POST",
         body: data,
       });
@@ -94,23 +93,32 @@ const AudioRecorder = () => {
 
   return (
     <div>
-      <main>
-        <div className="audio-controls">
+      <main className="font-sans text-base leading-6">
+        <div className="space-y-4">
           {!permission ? (
-            <button onClick={getMicrophonePermission} type="button">
+            <button
+              onClick={getMicrophonePermission}
+              className="btn-default"
+              type="button"
+            >
               Get Microphone
             </button>
           ) : null}
           {permission && recordingStatus === "inactive" ? (
-            <div>
-              <button onClick={startRecording} type="button">
+            <div className="space-x-4">
+              <button
+                onClick={startRecording}
+                className="btn-dark"
+                type="button"
+              >
                 Start Recording
               </button>
-              <label>
+              <label className="flex items-center space-x-2 mr-2">
                 Language:
                 <select
                   value={selectedLanguage}
                   onChange={(e) => setSelectedLanguage(e.target.value)}
+                  className="py-2 px-4 border border-gray-300 rounded-md bg-white focus:outline-none focus-visible:ring focus-visible:border-blue-300 transition-border-color"
                 >
                   <option value="english">English</option>
                   <option value="hindi">Hindi</option>
@@ -119,17 +127,31 @@ const AudioRecorder = () => {
             </div>
           ) : null}
           {recordingStatus === "recording" ? (
-            <button onClick={stopRecording} type="button">
+            <button
+              onClick={stopRecording}
+              className="btn-danger"
+              type="button"
+            >
               Stop Recording
             </button>
           ) : null}
         </div>
         {audio ? (
-          <div className="audio-player">
-            <audio src={audio} controls></audio>
-            <a download href={audio}>
-              Download Recording
-            </a>
+          <div className="space-y-4">
+            <div className="flex items-center space-x-4">
+              <audio
+                src={audio}
+                controls
+                className="border border-gray-300 rounded-md"
+              ></audio>
+              <a
+                download
+                href={audio}
+                className="text-blue-500 hover:underline"
+              >
+                Download Recording
+              </a>
+            </div>
           </div>
         ) : null}
       </main>

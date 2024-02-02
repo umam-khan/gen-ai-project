@@ -91,8 +91,32 @@ def decode_audio(audio):
 @app.route('/getaudio', methods=['POST'])
 def getaudio():
     try:
+        input_type = request.form.get('inputType')
+        language = request.form.get('language')
+        text = request.form.get('text')
+        audio_base64 = request.form.get('audio')
+
+        # Handle the data as needed
+        print(f'Language: {language}')
+        print(f'Audio:{audio_base64}')
+        # Save the audio to a file in the current folder
+        if input_type == 'audio' and audio_base64:
+            audio_binary = base64.b64decode(audio_base64.split(',')[1])
+            with open('recordedAudio.weba', 'wb') as audio_file:
+                audio_file.write(audio_binary)
+            print('Audio saved successfully')
+
+        return jsonify({"success": True, "message": "Data received successfully"})
+
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return jsonify({"success": False, "message": "Error processing data"})
+
+    '''
+    try:
         input_audio= request.form.get('audio')
         input_lang = request.form.get('language')
+        print(input_audio)
         if input_lang=='hindi':
             #base64encoded = encode_mp3_to_base64(audio_file)
             decoded = base64.b64decode(input_audio)
@@ -131,6 +155,7 @@ def getaudio():
         print(f"Error: {str(e)}")
 
     return jsonify({"success": False, "message": "Error"})
+'''
 
 
 @app.route('/gettext', methods=['POST'])
@@ -138,6 +163,8 @@ def gettext():
     try:
         input_text= request.form.get('text')
         input_lang = request.form.get('language')
+        print(input_text)
+        print(input_lang)
         if input_lang=='hindi':
             tt_hin_eng = hindi_to_english(input_text)
             tt_eng_hin = english_to_hindi(tt_hin_eng)
