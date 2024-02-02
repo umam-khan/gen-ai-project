@@ -45,7 +45,7 @@ const MainPage = () => {
             want to send audio
           </button>
         </Link>
-        <button
+        {/* <button
           onClick={toggleRecordOption("text")}
           className="btn-dark"
         >
@@ -56,9 +56,9 @@ const MainPage = () => {
           className="btn-dark"
         >
           Record Audio
-        </button>
+  </button> */}
       </div>
-      <div>{recordOption === "text" ? <TextInput /> : <AudioRecorder />}</div>
+      {/* <div>{recordOption === "text" ? <TextInput /> : <AudioRecorder />}</div>  */}
     </div>
   );
 };
