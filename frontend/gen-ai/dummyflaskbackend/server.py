@@ -5,6 +5,8 @@ import os, io, base64
 from pydub import AudioSegment
 import speech_recognition as sr
 import ttsmms as TTS
+import soundfile as sf
+from rag import *
 
 app = Flask(__name__)
 CORS(app)
@@ -16,8 +18,11 @@ def get_pdf():
         print(pdf_file)
         if pdf_file:
             pdf_file.save(os.path.join(os.getcwd(), 'uploaded_pdf.pdf'))
+            pdf_path = "C:\\Users\\Anand\\Desktop\\hack\\gen-ai-project\\frontend\\gen-ai\\dummyflaskbackend\\uploaded_pdf.pdf"
             print('PDF file saved successfully')
-
+            raw_text = get_pdf_text(pdf_path)
+            text_chunks = get_text_chunks(raw_text)
+            get_vector_store(text_chunks)
             return jsonify({"success": True, "message": "PDF received and saved successfully"})
 
     except Exception as e:
@@ -42,6 +47,7 @@ def mp3_to_text_hindi(audio_content):
     audio_stream = io.BytesIO(audio_content)
     text=''
     with sr.AudioFile(audio_stream) as source:
+        recognizer.adjust_for_ambient_noise(source)
         print("Processing audio file...")
         audio = recognizer.record(source)
         print("Recognizing...")
@@ -51,13 +57,13 @@ def mp3_to_text_hindi(audio_content):
     
 
 def hindi_text_to_mp3(text):
-    dir_path = ("./models/hin")
-    tts=TTS(dir_path)
-    synthesized_wav=tts.synthesis(text)
+    dir_path = "./models/hin"
+    pqr=TTS.TTS(dir_path)
+    synthesized_wav=pqr.synthesis(text)
     wav=synthesized_wav["x"]
-    wav_binary = wav.tobytes()
-    base64_encoded = base64.b64encode(wav_binary).decode('utf-8')
-    return base64_encoded
+    output_file_path = os.path.join(os.getcwd(), 'final_output.wav')
+    sf.write(output_file_path, wav, 22050, 'PCM_16')
+    return "done"
 
 
 def mp3_to_text_english(audio_content):
@@ -73,80 +79,59 @@ def mp3_to_text_english(audio_content):
 
 
 def english_text_to_mp3(text):
-    dir_path = ("./models/eng")
-    tts=TTS(dir_path)
-    synthesized_wav=tts.synthesis(text)
+    dir_path = "./models/eng"
+    pqr=TTS.TTS(dir_path)
+    synthesized_wav=pqr.synthesis(text)
     wav=synthesized_wav["x"]
-    wav_binary = wav.tobytes()
-    base64_encoded = base64.b64encode(wav_binary).decode('utf-8')
-    return base64_encoded
-
-
-def decode_audio(audio):
-    decoded_audio = base64.b64decode(audio)
-    return decoded_audio
-
+    output_file_path = os.path.join(os.getcwd(), 'final_output.wav')
+    sf.write(output_file_path, wav, 22050, 'PCM_16')
+    return "done"
 
 
 @app.route('/getaudio', methods=['POST'])
 def getaudio():
     try:
         input_type = request.form.get('inputType')
-        language = request.form.get('language')
+        input_lang = request.form.get('language')
         text = request.form.get('text')
         audio_file = request.files['audio']
-        # Save the audio file to the current folder
         audio_file.save(os.path.join(os.getcwd(), 'recordedAudio.weba'))
-        return 'Audio received and saved successfully', 200
-
-    except Exception as e:
-        print(f"Error: {str(e)}")
-        return jsonify({"success": False, "message": "Error processing data"})
-
-    '''
-    try:
-        input_audio= request.form.get('audio')
-        input_lang = request.form.get('language')
-        print(input_audio)
+        audio = AudioSegment.from_file("recordedAudio.weba", format="webm")
+        sf.write("output.wav", audio.get_array_of_samples(), audio.frame_rate)
+        file_path="output.wav"
         if input_lang=='hindi':
-            #base64encoded = encode_mp3_to_base64(audio_file)
-            decoded = base64.b64decode(input_audio)
-            audio = AudioSegment.from_mp3(io.BytesIO(decoded))
-            wav_data = io.BytesIO()
-            audio.export(wav_data, format="wav")
-            wav_data.seek(0)
-            stt_hindi = mp3_to_text_hindi(wav_data.read())
+            stt_hindi=''
+            with open(file_path, 'rb') as audio_file:
+                audio_content = audio_file.read()
+            stt_hindi = mp3_to_text_hindi(audio_content)
             print(stt_hindi)
             print('\n\n')
             tt_hin_eng = hindi_to_english(stt_hindi)
             print(tt_hin_eng)
             print('\n\n')
-            #text_query_pdf = query_pdf(tt_hin_eng)
-            tt_eng_hin = english_to_hindi(tt_hin_eng)#replace tt_hin_eng with text_query_pdf
+            text_query_pdf = starting_point(tt_hin_eng)
+            tt_eng_hin = english_to_hindi(text_query_pdf)#replace tt_hin_eng with text_query_pdf
             print(tt_eng_hin)
             print('\n\n')
             tts_hindi = hindi_text_to_mp3(tt_eng_hin)
-            decoded_answer_audio = decode_audio(tts_hindi)
+            print(tts_hindi)
             print('\n\n')
-            return jsonify({'text':tt_eng_hin,'audio':decoded_answer_audio, "success": True})
+            return jsonify({"text":tt_eng_hin, "success": True})
         else:
-            decoded = base64.b64decode(input_audio)
-            audio = AudioSegment.from_mp3(io.BytesIO(decoded))
-            wav_data = io.BytesIO()
-            audio.export(wav_data, format="wav")
-            wav_data.seek(0)
-            stt_english = mp3_to_text_english(wav_data.read())
+            with open(file_path, 'rb') as audio_file:
+                audio_content = audio_file.read()
+            stt_english = mp3_to_text_english(audio_content)
             print(stt_english)
             print('\n\n')
-            #text_query_pdf = query_pdf(stt_english)
-            tts_english = english_text_to_mp3(stt_english)#replace stt_english with text_query_pdf
-            decoded_answer_audio = decode_audio(tts_english)
-            return jsonify({"text":tt_eng_hin,"audio":decoded_answer_audio,"success": True})
+            text_query_pdf = starting_point(stt_english)
+            print(text_query_pdf)
+            tts_english = english_text_to_mp3(text_query_pdf)#replace stt_english with text_query_pdf
+            print(tts_english)
+            return jsonify({"text":text_query_pdf,"success": True})
     except Exception as e:
         print(f"Error: {str(e)}")
 
     return jsonify({"success": False, "message": "Error"})
-'''
 
 
 @app.route('/gettext', methods=['POST'])
@@ -158,10 +143,12 @@ def gettext():
         print(input_lang)
         if input_lang=='hindi':
             tt_hin_eng = hindi_to_english(input_text)
-            tt_eng_hin = english_to_hindi(tt_hin_eng)
-            return jsonify({"text":tt_eng_hin,"success":True})
+            text_query_pdf = starting_point(tt_hin_eng)
+            tt_eng_hin = english_to_hindi(text_query_pdf)
+            return jsonify({"text":text_query_pdf,"success":True})
         else:
-            return jsonify({"text":input_text,"success":True})
+            text_query_pdf = starting_point(input_text)
+            return jsonify({"text":text_query_pdf,"success":True})
     except Exception as e:
         print(f"Error: {str(e)}")
 
