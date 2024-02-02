@@ -10,7 +10,14 @@ const TextInput = () => {
 
       if (response.ok) {
         console.log("Data successfully sent to server");
-        console.log(data);
+        const jsonResponse = await response.json();
+
+    // Access the "text" value from the JSON response
+    const textValue = jsonResponse.text;
+
+    console.log("Text from server:", textValue);
+        // console.log(response);
+        // console.log(data);
       } else {
         console.error("Failed to send data to server");
       }

@@ -13,7 +13,7 @@ CORS(app)
 def get_pdf():
     try:
         pdf_file = request.files.get('pdf')
-
+        print(pdf_file)
         if pdf_file:
             pdf_file.save(os.path.join(os.getcwd(), 'uploaded_pdf.pdf'))
             print('PDF file saved successfully')
