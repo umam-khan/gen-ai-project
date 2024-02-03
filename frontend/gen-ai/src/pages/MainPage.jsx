@@ -1,8 +1,7 @@
 import { useState } from "react";
-import AudioRecorder from "../AudioRecorder";
-import TextInput from "../TextInput";
-import PdfUpload from "../PdfUpload";
+
 import { Link } from "react-router-dom";
+import PdfUpload from "../components/PdfUpload";
 
 const MainPage = () => {
   let [recordOption, setRecordOption] = useState("text");

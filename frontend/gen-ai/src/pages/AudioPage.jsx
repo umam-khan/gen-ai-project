@@ -1,14 +1,10 @@
 import React from 'react'
-import TextInput from '../TextInput'
+import TextInput from '../components/TextInput'
 import { useState } from 'react';
-import AudioRecorder from '../AudioRecorder';
+import AudioRecorder from '../components/AudioRecorder';
 import AudioPlayer from '../components/AudioPlayer';
 const AudioPage = () => {
-  const [textValue, setTextValue] = useState('');
-
-  const updateTextValue = (value) => {
-    setTextValue(value);
-  };
+  const [isAudioReady, setIsAudioReady] = useState(false); 
 
   return (
     <div className="flex h-screen w-screen">
@@ -25,11 +21,20 @@ const AudioPage = () => {
         </ul>
       </div>
     </div>
-  
-    {/* <!-- Chat Container --> */}
+    {/* Main content area */}
     <div className="flex flex-col flex-1">
         <div className="overflow-y-auto p-4 space-y-4 bg-gray-100 flex-1">
-          {/* Display the textValue */}
+          {/* Conditionally display AudioPlayer based on isAudioReady */}
+          {isAudioReady && <AudioPlayer />}
+        </div>
+
+        {/* Pass setIsAudioReady to AudioRecorder to update state upon successful audio upload */}
+        <AudioRecorder onAudioReady={() => setIsAudioReady(true)} />
+      </div>
+    {/* <!-- Chat Container -->
+    <div className="flex flex-col flex-1">
+        <div className="overflow-y-auto p-4 space-y-4 bg-gray-100 flex-1">
+          {/* Display the textValue 
           <div className="text-left">
             <div className="inline-block bg-gray-300 rounded px-4 py-2">
               <AudioPlayer />
@@ -37,16 +42,15 @@ const AudioPage = () => {
           </div>
         </div>
   
-      {/* <!-- Input Area --> */}
-      {/* <div className="p-4 border-t border-gray-200">
+       <!-- Input Area --> 
+       <div className="p-4 border-t border-gray-200">
         <div className="flex gap-4">
           <input type="text" className="flex-1 p-2 border border-gray-300 rounded" placeholder="Type your message..." />
           <button className="bg-blue-500 text-white rounded px-4 py-2">Send</button>
         </div>
-      </div> */}
-      <AudioRecorder />
+      </div> 
+      <AudioRecorder /> */}
     </div>
-  </div>
   )
 }
 

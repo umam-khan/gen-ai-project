@@ -1,5 +1,5 @@
 import React from 'react'
-import TextInput from '../TextInput'
+import TextInput from '../components/TextInput'
 import { useState } from 'react';
 const TextPage = () => {
   const [textValue, setTextValue] = useState('');

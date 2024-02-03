@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 
 const mimeType = "audio/webm";
 
-const AudioRecorder = () => {
+const AudioRecorder = ({ onAudioReady }) => {
   const [permission, setPermission] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState("english");
   const mediaRecorder = useRef(null);
@@ -77,8 +77,11 @@ const AudioRecorder = () => {
       });
 
       if (response.ok) {
+        const jsonresponse = await response.json();
         console.log("Data successfully sent to server");
-        console.log(data);
+        console.log(jsonresponse);
+        onAudioReady();
+        // console.log(data);
       } else {
         console.error("Failed to send data to server");
       }
