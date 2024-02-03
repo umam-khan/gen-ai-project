@@ -1,8 +1,9 @@
 import { useState, useRef } from "react";
+import { json } from "react-router-dom";
 
 const mimeType = "audio/webm";
 
-const AudioRecorder = ({ onAudioReady }) => {
+const AudioRecorder = ({ onAudioReady, updateTextValue }) => {
   const [permission, setPermission] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState("english");
   const mediaRecorder = useRef(null);
@@ -80,6 +81,9 @@ const AudioRecorder = ({ onAudioReady }) => {
         const jsonresponse = await response.json();
         console.log("Data successfully sent to server");
         console.log(jsonresponse);
+        const audiotext=jsonresponse.text;
+        console.log(audiotext)
+        updateTextValue(audiotext);
         onAudioReady();
         // console.log(data);
       } else {

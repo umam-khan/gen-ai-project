@@ -5,6 +5,11 @@ import AudioRecorder from '../components/AudioRecorder';
 import AudioPlayer from '../components/AudioPlayer';
 const AudioPage = () => {
   const [isAudioReady, setIsAudioReady] = useState(false); 
+  const [textValue, setTextValue] = useState('');
+
+  const updateTextValue = (value) => {
+    setTextValue(value);
+  };
 
   return (
     <div className="flex h-screen w-screen">
@@ -22,15 +27,21 @@ const AudioPage = () => {
       </div>
     </div>
     {/* Main content area */}
-    <div className="flex flex-col flex-1">
-        <div className="overflow-y-auto p-4 space-y-4 bg-gray-100 flex-1">
-          {/* Conditionally display AudioPlayer based on isAudioReady */}
-          {isAudioReady && <AudioPlayer />}
-        </div>
+    {/* Main content area */}
+<div className="flex flex-col flex-1 justify-center items-center">
+    <div className="overflow-y-auto p-4 space-y-4 bg-gray-100 flex-1 w-full flex justify-center">
+      {/* Conditionally display AudioPlayer based on isAudioReady */}
+      {isAudioReady && <AudioPlayer />}
+      {isAudioReady && (
+            <p className="text-center text-lg mt-4">{textValue}</p> // Display the audiotext
+          )}
+    </div>
 
-        {/* Pass setIsAudioReady to AudioRecorder to update state upon successful audio upload */}
-        <AudioRecorder onAudioReady={() => setIsAudioReady(true)} />
-      </div>
+    {/* Pass setIsAudioReady to AudioRecorder to update state upon successful audio upload */}
+    <AudioRecorder onAudioReady={() => setIsAudioReady(true)} updateTextValue={updateTextValue} />
+    
+</div>
+
     {/* <!-- Chat Container -->
     <div className="flex flex-col flex-1">
         <div className="overflow-y-auto p-4 space-y-4 bg-gray-100 flex-1">

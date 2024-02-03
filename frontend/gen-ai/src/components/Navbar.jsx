@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 const Navbar = () => {
   return (
-<nav className="bg-white border-gray-200 dark:bg-gray-900 sticky top-0">
+<nav className="bg-white border-gray-200 dark:bg-gray-900 sticky top-0 z-20">
   <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
   <Link to="/main"><div className="flex items-center space-x-3 rtl:space-x-reverse">
       <img src="https://flowbite.com/docs/images/logo.svg" className="h-8" alt="Flowbite Logo" />
