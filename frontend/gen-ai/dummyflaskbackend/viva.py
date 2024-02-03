@@ -37,9 +37,8 @@ def user_input(user_question):
     response = chain({"input_documents": docs}, return_only_outputs=True)
     return response["output_text"]  
 
-def main_viva():
-    user_question = "Viva questions"
-    result = user_input(user_question)
+def main_viva(inp):
+    result = user_input(inp)
     return result
 
 

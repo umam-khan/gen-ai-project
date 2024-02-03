@@ -7,9 +7,10 @@ from pydub import AudioSegment
 import speech_recognition as sr
 import soundfile as sf
 from rag import *
-from ragviva import *
-from ragsumm import *
+from viva import *
+from summ import *
 from gtts import gTTS
+import uuid
 
 app = Flask(__name__)
 CORS(app)
@@ -38,7 +39,7 @@ def get_pdf():
     return jsonify({"success": False, "message": "Error processing PDF"})
 
 ##get AUDIO
-@app.route('/audio')
+@app.route('/audio', methods=['GET'])
 def serve_audio():
     file_path = "C:/Users/Anand/Desktop/hack/gen-ai-project/frontend/gen-ai/dummyflaskbackend/final_output.wav"
     return send_file(file_path, mimetype='audio/wav')
@@ -146,8 +147,9 @@ def getaudio():
     try:
         input_lang = request.form.get('language')
         audio_file = request.files['audio']
-        audio_file.save(os.path.join(os.getcwd(), 'recordedAudio.weba'))
-        audio = AudioSegment.from_file("recordedAudio.weba", format="webm")
+        filename = f"recordedAudio_{uuid.uuid4()}.weba"
+        audio_file.save(os.path.join(os.getcwd(), filename))
+        audio = AudioSegment.from_file(filename, format="webm")
         sf.write("output.wav", audio.get_array_of_samples(), audio.frame_rate)
         file_path="output.wav"
         if input_lang=='hindi':
@@ -173,13 +175,13 @@ def getaudio():
             print(stt_marathi)
             print('\n\n')
             text_query_pdf = starting_point(stt_marathi)
-            tt_eng_hin = english_to_hindi(text_query_pdf)#replace tt_hin_eng with text_query_pdf
-            print(tt_eng_hin)
+            tt_eng_mar = english_to_marathi(text_query_pdf)#replace tt_hin_eng with text_query_pdf
+            print(tt_eng_mar)
             print('\n\n')
-            tts_hindi = hindi_text_to_mp3(tt_eng_hin)
-            print(tts_hindi)
+            tts_mar = marathi_text_to_mp3(tt_eng_mar)
+            print(tts_mar)
             print('\n\n')
-            return jsonify({"text":tt_eng_hin, "success": True})
+            return jsonify({"text":tt_eng_mar, "success": True})
         elif input_lang == 'tamil':
             with open(file_path, "rb") as f:
                 data = f.read()
@@ -215,7 +217,9 @@ def getaudio():
 @app.route('/getviva', methods=['POST'])
 def getviva():
     try:
-        viva_result = main_viva()        
+        question="Viva Questions"
+        viva_result = main_viva(question)
+        print(viva_result)        
         hindi_result = english_to_hindi(viva_result)
         return jsonify({"hindi":hindi_result,"english":viva_result,"success":True})
     except Exception as e:
@@ -226,7 +230,8 @@ def getviva():
 @app.route('/getsummary',methods=['POST'])
 def getsummmary():
     try:
-        summ_result = main_summ()        
+        question="Summarize"
+        summ_result = mainsumm(question)        
         hindi_result = english_to_hindi(summ_result)
         return jsonify({"hindi":hindi_result,"english":summ_result,"success":True})
     except Exception as e:
@@ -266,10 +271,12 @@ def gettext():
             tt_eng_hin = english_to_hindi(text_query_pdf)
             return jsonify({"text":tt_eng_hin,"success":True})
         elif input_lang=='marathi':
-            tt_hin_eng = marathi_to_english(input_text)
-            text_query_pdf = starting_point(tt_hin_eng)
-            tt_eng_hin = english_to_marathi(text_query_pdf)
-            return jsonify({"text":tt_eng_hin,"success":True})  
+            tt_mar_eng = marathi_to_english(input_text)
+            print(tt_mar_eng)
+            text_query_pdf = starting_point(tt_mar_eng)
+            print(text_query_pdf)
+            tt_eng_mar = english_to_marathi(text_query_pdf)
+            return jsonify({"text":tt_eng_mar,"success":True})  
         elif input_lang=='tamil':
             tt_hin_eng = tamil_to_english(input_text)
             text_query_pdf = starting_point(tt_hin_eng)

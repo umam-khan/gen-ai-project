@@ -44,8 +44,8 @@ def user_input(user_question):
 
     return response["output_text"]
 
-def main_summ():
-    result = user_input("Summarize")
+def mainsumm(inp):
+    result = user_input(inp)
     return result
 
 
