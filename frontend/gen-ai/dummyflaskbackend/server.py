@@ -7,6 +7,8 @@ from pydub import AudioSegment
 import speech_recognition as sr
 import soundfile as sf
 from rag import *
+from ragviva import *
+from ragsumm import *
 from gtts import gTTS
 
 app = Flask(__name__)
@@ -15,7 +17,7 @@ CORS(app)
 API_URL = "https://api-inference.huggingface.co/models/openai/whisper-large-v3"
 headers = {"Authorization": "Bearer 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"}
 
-
+###GET PDF 
 @app.route('/getpdf', methods=['POST'])
 def get_pdf():
     try:
@@ -35,23 +37,14 @@ def get_pdf():
 
     return jsonify({"success": False, "message": "Error processing PDF"})
 
+##get AUDIO
 @app.route('/audio')
 def serve_audio():
     file_path = "C:/Users/Anand/Desktop/hack/gen-ai-project/frontend/gen-ai/dummyflaskbackend/final_output.wav"
     return send_file(file_path, mimetype='audio/wav')
 
-def hindi_to_english(hindi_text):
-    translator = Translator(to_lang="en", from_lang="hi")
-    translated_text = translator.translate(hindi_text)
-    return translated_text
 
-
-def english_to_hindi(english_text):
-    translator = Translator(to_lang="hi", from_lang='en')
-    translated_text = translator.translate(english_text)
-    return translated_text
-
-
+#get getaudio
 def mp3_to_text_hindi(data):
     API_URL = "https://api-inference.huggingface.co/models/openai/whisper-large-v3"
     headers = {"Authorization": "Bearer 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"}
@@ -59,7 +52,12 @@ def mp3_to_text_hindi(data):
     result =  response.json()
     return result['text']
 
-    
+
+def english_to_hindi(english_text):
+    translator = Translator(to_lang="hi", from_lang='en')
+    translated_text = translator.translate(english_text)
+    return translated_text
+
 
 def hindi_text_to_mp3(text):
     language = 'hi'
@@ -93,13 +91,60 @@ def english_text_to_mp3(text):
     return "done"
 
 
+def mp3_to_text_marathi(data):
+    API_URL = "https://api-inference.huggingface.co/models/openai/whisper-large-v3"
+    headers = {"Authorization": "Bearer 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"}
+    response = requests.post(API_URL, headers=headers, data=data)
+    result =  response.json()
+    return result['text']
 
+def english_to_marathi(english_text):
+    translator = Translator(to_lang="mr", from_lang='en')
+    translated_text = translator.translate(english_text)
+    return translated_text
+
+
+def marathi_text_to_mp3(text):
+    language = 'mr'
+    speed = False
+    tts = gTTS(text=text, lang=language, slow=speed)
+    tts.save("output.mp3")
+    audio = AudioSegment.from_mp3("output.mp3")
+    audio.export("final_output.wav", format="wav")
+    import os
+    os.remove("output.mp3")
+    return "done"
+
+
+def mp3_to_text_tamil(data):
+    API_URL = "https://api-inference.huggingface.co/models/openai/whisper-large-v3"
+    headers = {"Authorization": "Bearer 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"}
+    response = requests.post(API_URL, headers=headers, data=data)
+    result =  response.json()
+    return result['text']
+
+def english_to_tamil(english_text):
+    translator = Translator(to_lang="ta", from_lang='en')
+    translated_text = translator.translate(english_text)
+    return translated_text
+
+
+def tamil_text_to_mp3(text):
+    language = 'ta'
+    speed = False
+    tts = gTTS(text=text, lang=language, slow=speed)
+    tts.save("output.mp3")
+    audio = AudioSegment.from_mp3("output.mp3")
+    audio.export("final_output.wav", format="wav")
+    import os
+    os.remove("output.mp3")
+    return "done"
+
+#getaudio
 @app.route('/getaudio', methods=['POST'])
 def getaudio():
     try:
-        input_type = request.form.get('inputType')
         input_lang = request.form.get('language')
-        text = request.form.get('text')
         audio_file = request.files['audio']
         audio_file.save(os.path.join(os.getcwd(), 'recordedAudio.weba'))
         audio = AudioSegment.from_file("recordedAudio.weba", format="webm")
@@ -120,6 +165,36 @@ def getaudio():
             print(tts_hindi)
             print('\n\n')
             return jsonify({"text":tt_eng_hin, "success": True})
+        elif input_lang == 'marathi':
+            with open(file_path, "rb") as f:
+                data = f.read()
+            stt_marathi=''
+            stt_marathi = mp3_to_text_marathi(data)
+            print(stt_marathi)
+            print('\n\n')
+            text_query_pdf = starting_point(stt_marathi)
+            tt_eng_hin = english_to_hindi(text_query_pdf)#replace tt_hin_eng with text_query_pdf
+            print(tt_eng_hin)
+            print('\n\n')
+            tts_hindi = hindi_text_to_mp3(tt_eng_hin)
+            print(tts_hindi)
+            print('\n\n')
+            return jsonify({"text":tt_eng_hin, "success": True})
+        elif input_lang == 'tamil':
+            with open(file_path, "rb") as f:
+                data = f.read()
+            stt_tamil=''
+            stt_tamil = mp3_to_text_tamil(data)
+            print(stt_tamil)
+            print('\n\n')
+            text_query_pdf = starting_point(stt_tamil)
+            tt_eng_tam = english_to_tamil(text_query_pdf)#replace tt_hin_eng with text_query_pdf
+            print(tt_eng_tam)
+            print('\n\n')
+            tts_tamil = tamil_text_to_mp3(tt_eng_tam)
+            print(tts_tamil)
+            print('\n\n')
+            return jsonify({"text":tt_eng_tam, "success": True})
         else:
             with open(file_path, 'rb') as audio_file:
                 audio_content = audio_file.read()
@@ -136,7 +211,48 @@ def getaudio():
 
     return jsonify({"success": False, "message": "Error"})
 
+#getviva
+@app.route('/getviva', methods=['POST'])
+def getviva():
+    try:
+        viva_result = main_viva()        
+        hindi_result = english_to_hindi(viva_result)
+        return jsonify({"hindi":hindi_result,"english":viva_result,"success":True})
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return jsonify({"success": False, "message": "Error"})    
 
+#getsummary
+@app.route('/getsummary',methods=['POST'])
+def getsummmary():
+    try:
+        summ_result = main_summ()        
+        hindi_result = english_to_hindi(summ_result)
+        return jsonify({"hindi":hindi_result,"english":summ_result,"success":True})
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return jsonify({"success": False, "message": "Error"}) 
+
+
+def hindi_to_english(english_text):
+    translator = Translator(to_lang="en", from_lang='hi')
+    translated_text = translator.translate(english_text)
+    return translated_text
+
+
+def marathi_to_english(english_text):
+    translator = Translator(to_lang="en", from_lang='mr')
+    translated_text = translator.translate(english_text)
+    return translated_text    
+
+
+def tamil_to_english(english_text):
+    translator = Translator(to_lang="en", from_lang='ta')
+    translated_text = translator.translate(english_text)
+    return translated_text    
+
+
+#gettext
 @app.route('/gettext', methods=['POST'])
 def gettext():
     try:
@@ -148,7 +264,17 @@ def gettext():
             tt_hin_eng = hindi_to_english(input_text)
             text_query_pdf = starting_point(tt_hin_eng)
             tt_eng_hin = english_to_hindi(text_query_pdf)
-            return jsonify({"text":text_query_pdf,"success":True})
+            return jsonify({"text":tt_eng_hin,"success":True})
+        elif input_lang=='marathi':
+            tt_hin_eng = marathi_to_english(input_text)
+            text_query_pdf = starting_point(tt_hin_eng)
+            tt_eng_hin = english_to_marathi(text_query_pdf)
+            return jsonify({"text":tt_eng_hin,"success":True})  
+        elif input_lang=='tamil':
+            tt_hin_eng = tamil_to_english(input_text)
+            text_query_pdf = starting_point(tt_hin_eng)
+            tt_eng_hin = english_to_tamil(text_query_pdf)
+            return jsonify({"text":tt_eng_hin,"success":True})              
         else:
             text_query_pdf = starting_point(input_text)
             return jsonify({"text":text_query_pdf,"success":True})
