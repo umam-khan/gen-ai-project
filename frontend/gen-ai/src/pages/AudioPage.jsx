@@ -2,6 +2,7 @@ import React from 'react'
 import TextInput from '../TextInput'
 import { useState } from 'react';
 import AudioRecorder from '../AudioRecorder';
+import AudioPlayer from '../components/AudioPlayer';
 const AudioPage = () => {
   const [textValue, setTextValue] = useState('');
 
@@ -31,7 +32,7 @@ const AudioPage = () => {
           {/* Display the textValue */}
           <div className="text-left">
             <div className="inline-block bg-gray-300 rounded px-4 py-2">
-              {textValue}
+              <AudioPlayer />
             </div>
           </div>
         </div>
