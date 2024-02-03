@@ -1,7 +1,13 @@
 import React from 'react'
 import TextInput from '../TextInput'
-
+import { useState } from 'react';
 const TextPage = () => {
+  const [textValue, setTextValue] = useState('');
+
+  const updateTextValue = (value) => {
+    setTextValue(value);
+  };
+
   return (
     <div className="flex h-screen w-screen">
     {/* <!-- Sidebar --> */}
@@ -20,18 +26,14 @@ const TextPage = () => {
   
     {/* <!-- Chat Container --> */}
     <div className="flex flex-col flex-1">
-      <div className="overflow-y-auto p-4 space-y-4 bg-gray-100 flex-1">
-        <div className="text-right">
-          <div className="inline-block bg-blue-500 text-white rounded px-4 py-2">
-            User message
+        <div className="overflow-y-auto p-4 space-y-4 bg-gray-100 flex-1">
+          {/* Display the textValue */}
+          <div className="text-left">
+            <div className="inline-block bg-gray-300 rounded px-4 py-2">
+              {textValue}
+            </div>
           </div>
         </div>
-        <div className="text-left">
-          <div className="inline-block bg-gray-300 rounded px-4 py-2">
-            ChatGPT response
-          </div>
-        </div>
-      </div>
   
       {/* <!-- Input Area --> */}
       {/* <div className="p-4 border-t border-gray-200">
@@ -40,7 +42,7 @@ const TextPage = () => {
           <button className="bg-blue-500 text-white rounded px-4 py-2">Send</button>
         </div>
       </div> */}
-      <TextInput />
+      <TextInput updateTextValue={updateTextValue} />
     </div>
   </div>
   )

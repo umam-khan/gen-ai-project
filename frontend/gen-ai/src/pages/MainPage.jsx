@@ -37,12 +37,12 @@ const MainPage = () => {
       <div className="flex justify-center items-center gap-10">
         <Link to="/text">
           <button className="btn-dark">
-            want to send text
+            want to use text
           </button>
         </Link>
         <Link to="/audio">
           <button className="btn-dark">
-            want to send audio
+            want to use audio
           </button>
         </Link>
         {/* <button

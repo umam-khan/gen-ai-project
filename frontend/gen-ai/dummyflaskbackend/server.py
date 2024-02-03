@@ -18,7 +18,7 @@ def get_pdf():
         print(pdf_file)
         if pdf_file:
             pdf_file.save(os.path.join(os.getcwd(), 'uploaded_pdf.pdf'))
-            pdf_path = "C:\\Users\\Anand\\Desktop\\hack\\gen-ai-project\\frontend\\gen-ai\\dummyflaskbackend\\uploaded_pdf.pdf"
+            pdf_path = "G:\\genai\\frontend\\gen-ai\\dummyflaskbackend\\uploaded_pdf.pdf"
             print('PDF file saved successfully')
             raw_text = get_pdf_text(pdf_path)
             text_chunks = get_text_chunks(raw_text)
@@ -57,7 +57,7 @@ def mp3_to_text_hindi(audio_content):
     
 
 def hindi_text_to_mp3(text):
-    dir_path = "./models/hin"
+    dir_path = "G:\\genai\\frontend\\gen-ai\\dummyflaskbackend\\models\\hin"
     pqr=TTS.TTS(dir_path)
     synthesized_wav=pqr.synthesis(text)
     wav=synthesized_wav["x"]
@@ -79,7 +79,7 @@ def mp3_to_text_english(audio_content):
 
 
 def english_text_to_mp3(text):
-    dir_path = "./models/eng"
+    dir_path = "G:\\genai\\frontend\\gen-ai\\dummyflaskbackend\\models\\eng"
     pqr=TTS.TTS(dir_path)
     synthesized_wav=pqr.synthesis(text)
     wav=synthesized_wav["x"]
@@ -113,8 +113,8 @@ def getaudio():
             tt_eng_hin = english_to_hindi(text_query_pdf)#replace tt_hin_eng with text_query_pdf
             print(tt_eng_hin)
             print('\n\n')
-            tts_hindi = hindi_text_to_mp3(tt_eng_hin)
-            print(tts_hindi)
+            #tts_hindi = hindi_text_to_mp3(tt_eng_hin)
+            #print(tts_hindi)
             print('\n\n')
             return jsonify({"text":tt_eng_hin, "success": True})
         else:
@@ -125,8 +125,8 @@ def getaudio():
             print('\n\n')
             text_query_pdf = starting_point(stt_english)
             print(text_query_pdf)
-            tts_english = english_text_to_mp3(text_query_pdf)#replace stt_english with text_query_pdf
-            print(tts_english)
+            #tts_english = english_text_to_mp3(text_query_pdf)#replace stt_english with text_query_pdf
+            #print(tts_english)
             return jsonify({"text":text_query_pdf,"success": True})
     except Exception as e:
         print(f"Error: {str(e)}")
@@ -145,7 +145,7 @@ def gettext():
             tt_hin_eng = hindi_to_english(input_text)
             text_query_pdf = starting_point(tt_hin_eng)
             tt_eng_hin = english_to_hindi(text_query_pdf)
-            return jsonify({"text":text_query_pdf,"success":True})
+            return jsonify({"text":tt_eng_hin,"success":True})
         else:
             text_query_pdf = starting_point(input_text)
             return jsonify({"text":text_query_pdf,"success":True})
