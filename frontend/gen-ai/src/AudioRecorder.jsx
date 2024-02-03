@@ -1,5 +1,7 @@
 import { useState, useRef } from "react";
 
+const mimeType = "audio/webm";
+
 const AudioRecorder = () => {
   const [permission, setPermission] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState("english");
@@ -28,7 +30,7 @@ const AudioRecorder = () => {
 
   const startRecording = async () => {
     setRecordingStatus("recording");
-    const media = new MediaRecorder(stream, { mimeType: "audio/webm" });
+    const media = new MediaRecorder(stream, { type: mimeType });
 
     mediaRecorder.current = media;
 
@@ -42,51 +44,51 @@ const AudioRecorder = () => {
       localAudioChunks.push(event.data);
     };
 
-    mediaRecorder.current.onstop = async () => {
-      // Conversion to the desired format would ideally happen here or on the server
-      const audioBlob = new Blob(localAudioChunks, { type: "audio/webm" });
-
-      // Create a URL for the Blob
-      const audioUrl = URL.createObjectURL(audioBlob);
-
-      setAudio(audioUrl);
-      setAudioChunks([]);
-    };
-
     setAudioChunks(localAudioChunks);
   };
 
   const stopRecording = async () => {
     setRecordingStatus("inactive");
     mediaRecorder.current.stop();
+
+    mediaRecorder.current.onstop = async () => {
+      const audioBlob = new Blob(audioChunks, { type: mimeType });
+
+      // Create a URL for the Blob
+      const audioUrl = URL.createObjectURL(audioBlob);
+
+      setAudio(audioUrl);
+
+      const formData = new FormData();
+      formData.append("inputType", "audio");
+      formData.append("language", selectedLanguage);
+      formData.append("text", "NULL");
+      formData.append("audio", audioBlob, "recordedAudio.weba");
+
+      sendDataToServer(formData);
+    };
   };
 
-  const sendDataToServer = async () => {
-    if (!audio) return;
-
-    const formData = new FormData();
-    formData.append("inputType", "audio");
-    formData.append("language", selectedLanguage);
-    formData.append("text", "NULL");
-    formData.append("audio", await fetch(audio).then(r => r.blob()), "recordedAudio.webm"); // Sending as .webm, simulating desired behavior
-
+  const sendDataToServer = async (data) => {
     try {
       const response = await fetch("http://localhost:5000/getaudio", {
         method: "POST",
-        body: formData,
+        body: data,
       });
 
       if (response.ok) {
         console.log("Data successfully sent to server");
+        console.log(data);
       } else {
         console.error("Failed to send data to server");
       }
     } catch (error) {
       console.error("Error sending data to server:", error);
     }
+
+    setAudioChunks([]);
   };
 
-  // Adjusted to include a button for sending data after recording is stopped
   return (
     <div>
       <div className="p-4 border-gray-200 m-4">
@@ -133,34 +135,27 @@ const AudioRecorder = () => {
                   Stop Recording
                 </button>
               ) : null}
-              {audio ? (
-                <div className="space-y-4">
-                  <div className="flex items-center space-x-4">
-                    <audio
-                      controls
-                      className="border border-gray-300 rounded-md"
-                    >
-                      <source src={audio} type="audio/webm" />
-                      Your browser does not support the audio element.
-                    </audio>
-                    <button
-                      onClick={sendDataToServer}
-                      className="btn-blue"
-                      type="button"
-                    >
-                      Send to Server
-                    </button>
-                    <a
-                      download
-                      href={audio}
-                      className="text-blue-500 hover:underline"
-                    >
-                      Download Recording
-                    </a>
-                  </div>
-                </div>
-              ) : null}
             </div>
+            {audio ? (
+              <div className="space-y-4">
+                <div className="flex items-center space-x-4">
+                  <audio
+                    controls
+                    className="border border-gray-300 rounded-md"
+                  >
+                    <source src={audio} type={mimeType} />
+                    Your browser does not support the audio element.
+                  </audio>
+                  <a
+                    download
+                    href={audio}
+                    className="text-blue-500 hover:underline"
+                  >
+                    Download Recording
+                  </a>
+                </div>
+              </div>
+            ) : null}
           </main>
         </div>
       </div>
@@ -181,7 +176,6 @@ const AudioRecorder = () => {
 };
 
 export default AudioRecorder;
-
 
 // import { useState, useRef } from "react";
 
