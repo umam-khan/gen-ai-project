@@ -1,15 +1,27 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
+import requests
 from translate import Translator
 import os, io, base64
 from pydub import AudioSegment
 import speech_recognition as sr
-import ttsmms as TTS
 import soundfile as sf
 from rag import *
+from gtts import gTTS
+
 
 app = Flask(__name__)
 CORS(app)
+
+API_URL = "https://api-inference.huggingface.co/models/openai/whisper-large-v3"
+headers = {"Authorization": "Bearer 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"}
+
+def query(filename):
+    with open(filename, "rb") as f:
+        data = f.read()
+    response = requests.post(API_URL, headers=headers, data=data)
+    return response.json()
+output = query("output.wav")
 
 @app.route('/getpdf', methods=['POST'])
 def get_pdf():
@@ -18,7 +30,7 @@ def get_pdf():
         print(pdf_file)
         if pdf_file:
             pdf_file.save(os.path.join(os.getcwd(), 'uploaded_pdf.pdf'))
-            pdf_path = "G:\\genai\\frontend\\gen-ai\\dummyflaskbackend\\uploaded_pdf.pdf"
+            pdf_path = "C:\\Users\\Anand\\Desktop\\hack\\gen-ai-project\\frontend\\gen-ai\\dummyflaskbackend\\uploaded_pdf.pdf"
             print('PDF file saved successfully')
             raw_text = get_pdf_text(pdf_path)
             text_chunks = get_text_chunks(raw_text)
@@ -42,27 +54,26 @@ def english_to_hindi(english_text):
     return translated_text
 
 
-def mp3_to_text_hindi(audio_content):
-    recognizer = sr.Recognizer()
-    audio_stream = io.BytesIO(audio_content)
-    text=''
-    with sr.AudioFile(audio_stream) as source:
-        recognizer.adjust_for_ambient_noise(source)
-        print("Processing audio file...")
-        audio = recognizer.record(source)
-        print("Recognizing...")
-        text = recognizer.recognize_google(audio, language = 'hi-IN')
-    return text
-    
+def mp3_to_text_hindi(filename):
+    API_URL = "https://api-inference.huggingface.co/models/openai/whisper-large-v3"
+    headers = {"Authorization": "Bearer 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"}
+    with open(filename, "rb") as f:
+        data = f.read()
+    response = requests.post(API_URL, headers=headers, data=data)
+    result = response.json()
+    return result['text']
+
     
 
 def hindi_text_to_mp3(text):
-    dir_path = "G:\\genai\\frontend\\gen-ai\\dummyflaskbackend\\models\\hin"
-    pqr=TTS.TTS(dir_path)
-    synthesized_wav=pqr.synthesis(text)
-    wav=synthesized_wav["x"]
-    output_file_path = os.path.join(os.getcwd(), 'final_output.wav')
-    sf.write(output_file_path, wav, 22050, 'PCM_16')
+    language = 'hi'
+    speed = False
+    tts = gTTS(text=text, lang=language, slow=speed)
+    tts.save("output.mp3")
+    audio = AudioSegment.from_mp3("output.mp3")
+    audio.export("final_output.wav", format="wav")
+    import os
+    os.remove("output.mp3")
     return "done"
 
 
@@ -79,13 +90,16 @@ def mp3_to_text_english(audio_content):
 
 
 def english_text_to_mp3(text):
-    dir_path = "G:\\genai\\frontend\\gen-ai\\dummyflaskbackend\\models\\eng"
-    pqr=TTS.TTS(dir_path)
-    synthesized_wav=pqr.synthesis(text)
-    wav=synthesized_wav["x"]
-    output_file_path = os.path.join(os.getcwd(), 'final_output.wav')
-    sf.write(output_file_path, wav, 22050, 'PCM_16')
+    language = 'en'
+    speed = False
+    tts = gTTS(text=text, lang=language, slow=speed)
+    tts.save("output.mp3")
+    audio = AudioSegment.from_mp3("output.mp3")
+    audio.export("final_output.wav", format="wav")
+    import os
+    os.remove("output.mp3")
     return "done"
+
 
 
 @app.route('/getaudio', methods=['POST'])
@@ -101,20 +115,18 @@ def getaudio():
         file_path="output.wav"
         if input_lang=='hindi':
             stt_hindi=''
-            with open(file_path, 'rb') as audio_file:
-                audio_content = audio_file.read()
-            stt_hindi = mp3_to_text_hindi(audio_content)
+            stt_hindi = mp3_to_text_hindi(file_path)
             print(stt_hindi)
             print('\n\n')
             tt_hin_eng = hindi_to_english(stt_hindi)
             print(tt_hin_eng)
             print('\n\n')
             text_query_pdf = starting_point(tt_hin_eng)
-            tt_eng_hin = english_to_hindi(text_query_pdf)#replace tt_hin_eng with text_query_pdf
+            tt_eng_hin = english_to_hindi(text_query_pdf)
             print(tt_eng_hin)
             print('\n\n')
-            #tts_hindi = hindi_text_to_mp3(tt_eng_hin)
-            #print(tts_hindi)
+            tts_hindi = hindi_text_to_mp3(tt_eng_hin)
+            print(tts_hindi)
             print('\n\n')
             return jsonify({"text":tt_eng_hin, "success": True})
         else:
@@ -125,14 +137,19 @@ def getaudio():
             print('\n\n')
             text_query_pdf = starting_point(stt_english)
             print(text_query_pdf)
-            #tts_english = english_text_to_mp3(text_query_pdf)#replace stt_english with text_query_pdf
-            #print(tts_english)
+            tts_english = english_text_to_mp3(text_query_pdf)#replace stt_english with text_query_pdf
+            print(tts_english)
             return jsonify({"text":text_query_pdf,"success": True})
     except Exception as e:
         print(f"Error: {str(e)}")
 
     return jsonify({"success": False, "message": "Error"})
 
+
+@app.route('/audio')
+def serve_audio():
+    file_path = "C:/Users/Anand/Desktop/hack/gen-ai-project/frontend/gen-ai/dummyflaskbackend/final_output.wav"
+    return send_file(file_path, mimetype='audio/wav')
 
 @app.route('/gettext', methods=['POST'])
 def gettext():
@@ -145,7 +162,7 @@ def gettext():
             tt_hin_eng = hindi_to_english(input_text)
             text_query_pdf = starting_point(tt_hin_eng)
             tt_eng_hin = english_to_hindi(text_query_pdf)
-            return jsonify({"text":tt_eng_hin,"success":True})
+            return jsonify({"text":text_query_pdf,"success":True})
         else:
             text_query_pdf = starting_point(input_text)
             return jsonify({"text":text_query_pdf,"success":True})
