@@ -31,7 +31,7 @@ const MainPage = () => {
 
   return (
     <div className="h-screen flex flex-col justify-center items-center space-y-5 font-sans text-base leading-6">
-      <h1 className="text-4xl leading-11">Query Your PDF</h1>
+      <h1 className="text-4xl leading-11">HEALTHIFY</h1>
       <PdfUpload />
       <div className="flex justify-center items-center gap-10">
         <Link to="/text">
@@ -42,6 +42,16 @@ const MainPage = () => {
         <Link to="/audio">
           <button className="btn-dark">
             want to use audio
+          </button>
+        </Link>
+        <Link to="/viva">
+          <button className="btn-dark">
+            viva
+          </button>
+        </Link>
+        <Link to="/summary">
+          <button className="btn-dark">
+            summary
           </button>
         </Link>
         {/* <button
