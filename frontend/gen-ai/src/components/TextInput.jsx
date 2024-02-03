@@ -76,6 +76,8 @@ const TextInput = ({ updateTextValue }) => {
               >
                 <option value="english">English</option>
                 <option value="hindi">Hindi</option>
+                <option value="marathi">Marathi</option>
+                <option value="tamil">Tamil</option>
               </select>
             </label>
           </div>
