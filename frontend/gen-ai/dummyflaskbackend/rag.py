@@ -36,14 +36,22 @@ def get_vector_store(text_chunks):
 def get_conversational_chain():
 
     prompt_template = """
-    Answer the question as detailed as possible from the provided PDF, make sure to provide all the details, don't provide the wrong answer\n\n
+    Retrieve the most relevant information from the provided knowledge base related to the query. Synthesize the information to generate a comprehensive yet concise response. 
+    The answer should fully address the user's query without introducing any inaccuracies or speculative details not supported by the knowledge base.
+    Ensure the response is neither too brief nor too lengthy. If the query encompasses multiple facets or requires clarification on different aspects, structure the response in 
+    a logical, cohesive manner, addressing each point succinctly. Avoid technical jargon unless it is necessary to accurately answer the question. When technical terms are used, provide clear 
+    definitions or explanations to ensure the response is accessible to a general audience. Do not fabricate information or provide speculative answers. If the information is not available in 
+    the knowledge base, indicate clearly that the answer is based on the available data and suggest a general direction for further inquiry or research if applicable."Based on the latest 
+    updates in the provided knowledge base, {question}. Ensure the response is in less than 500 characters, reflecting the most recent information available, and framed in a manner that is 
+    easy to understand for someone unfamiliar with the topic."
+\n\n
     Context:\n {context}?\n
     Question: \n{question}\n
 
     Answer:
     """
 
-    model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0.3)
+    model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0.2)
 
     prompt = PromptTemplate(template = prompt_template, input_variables = ["context", "question"])
     chain = load_qa_chain(model, chain_type="stuff", prompt=prompt)
