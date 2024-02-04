@@ -59,8 +59,7 @@ const SummaryPage = () => {
           {!isLoading && !error && (
             <div className="text-left">
               <div className="inline-block bg-gray-300 rounded px-4 py-2">
-                <p><strong>English:</strong> {vivaData.english}</p>
-                <p><strong>Hindi:</strong> {vivaData.hindi}</p>
+                <pre><strong>English:</strong> {vivaData.english}</pre>
               </div>
             </div>
           )}

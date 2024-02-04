@@ -31,7 +31,7 @@ const MainPage = () => {
 
   return (
     <div className="h-screen flex flex-col justify-center items-center space-y-5 font-sans text-base leading-6">
-      <h1 className="text-4xl leading-11">HEALTHIFY</h1>
+      <h1 className="text-4xl leading-11">Query Your Pdf</h1>
       <PdfUpload />
       <div className="flex justify-center items-center gap-10">
         <Link to="/text">

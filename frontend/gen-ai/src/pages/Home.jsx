@@ -25,7 +25,7 @@ const Home = () => {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
         <div className="flex flex-col items-center text-center">
           <div className="flex items-center">
-            <h1 className="mr-3 text-5xl font-semibold">Chat with medical PDFs</h1>
+            <h1 className="mr-3 text-5xl font-semibold">Chat with your PDFs</h1>
             {/* <button>login</button> */}
           </div>
 
@@ -51,7 +51,7 @@ const Home = () => {
             ) : ( */}
               <Link to="/main">
                 <button className="btn-default">
-                   get Started!
+                   Get Started
                   {/* <LogIn className="w-4 h-4 ml-2" /> */}
                 </button>
               </Link>

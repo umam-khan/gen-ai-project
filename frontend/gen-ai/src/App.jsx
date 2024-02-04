@@ -7,6 +7,7 @@ import AudioPage from "./pages/AudioPage";
 import Navbar from "./components/Navbar";
 import VivaPage from "./pages/VivaPage";
 import SummaryPage from "./pages/SummaryPage";
+import AuthenticatedWrapper from "./AuthenticatedWrapper"; // adjust the import path as needed
 
 const App = () => {
   return (
@@ -14,12 +15,14 @@ const App = () => {
     <BrowserRouter>
     <Navbar />
       <Routes>
-          <Route path="/main" element={<MainPage />} />
+          <Route path="/main" element={<AuthenticatedWrapper>
+                <MainPage />
+              </AuthenticatedWrapper>} />
           <Route path="/" element={<Home />} />
-          <Route path="/text" element={<TextPage />} />
-          <Route path="/audio" element={<AudioPage />} />
-          <Route path="/viva" element={<VivaPage /> } />
-          <Route path="/summary" element={<SummaryPage/> } />
+          <Route path="/text" element={<AuthenticatedWrapper><TextPage /></AuthenticatedWrapper>} />
+          <Route path="/audio" element={<AuthenticatedWrapper><AudioPage /></AuthenticatedWrapper>} />
+          <Route path="/viva" element={<AuthenticatedWrapper><VivaPage /></AuthenticatedWrapper> } />
+          <Route path="/summary" element={<AuthenticatedWrapper><SummaryPage/></AuthenticatedWrapper> } />
       </Routes>
     </BrowserRouter>
     </div>
