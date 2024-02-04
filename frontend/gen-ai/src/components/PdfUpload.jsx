@@ -1,15 +1,16 @@
+// PdfUpload.js
 import React, { useState } from 'react';
 
-const PdfUpload = () => {
+const PdfUpload = ({ onUploadStart, onUploadSuccess }) => {
   const [selectedFile, setSelectedFile] = useState(null);
 
   const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    setSelectedFile(file);
+    setSelectedFile(event.target.files[0]);
   };
 
   const handleFileUpload = async () => {
     if (selectedFile) {
+      onUploadStart(); // Notify parent component that upload has started
       const formData = new FormData();
       formData.append('pdf', selectedFile);
 
@@ -18,14 +19,16 @@ const PdfUpload = () => {
           method: 'POST',
           body: formData,
         });
-
         if (response.ok) {
           console.log('PDF successfully sent to server');
         } else {
           console.error('Failed to send PDF to server');
         }
+        const success = response.ok;
+        onUploadSuccess(success); // Notify parent component about the upload success status
       } catch (error) {
         console.error('Error sending PDF to server:', error);
+        onUploadSuccess(false); // Assume failure on catch
       }
     }
   };
@@ -83,6 +86,17 @@ const PdfUpload = () => {
         )}
       </label>
     </div>
+    // <div className="flex flex-col items-center justify-center w-full">
+    //   <input id="dropzone-file" type="file" className="hidden" accept=".pdf" onChange={handleFileChange} />
+    //   <label htmlFor="dropzone-file" className="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer">
+    //     Select PDF
+    //   </label>
+    //   {selectedFile && (
+    //     <button onClick={handleFileUpload} className="mt-2 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+    //       Upload PDF
+    //     </button>
+    //   )}
+    // </div>
   );
 };
 

@@ -11,7 +11,7 @@ import AuthenticatedWrapper from "./AuthenticatedWrapper"; // adjust the import 
 
 const App = () => {
   return (
-    <div>
+    <div className="w-screen min-h-screen bg-gradient-to-r from-rose-100 to-teal-100">
     <BrowserRouter>
     <Navbar />
       <Routes>
