@@ -29,7 +29,7 @@ const AudioPage = () => {
     {/* Main content area */}
     {/* Main content area */}
 <div className="flex flex-col flex-1 justify-center items-center">
-    <div className="overflow-y-auto p-4 space-y-4 bg-gray-100 flex-1 w-full flex justify-center">
+    <div className="overflow-y-auto p-4 space-y-4 bg-gray-100 flex-1 w-full flex justify-center items-center">
       {/* Conditionally display AudioPlayer based on isAudioReady */}
       {isAudioReady && <AudioPlayer />}
       {isAudioReady && (

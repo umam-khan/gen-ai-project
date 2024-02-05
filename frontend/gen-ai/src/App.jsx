@@ -8,6 +8,7 @@ import Navbar from "./components/Navbar";
 import VivaPage from "./pages/VivaPage";
 import SummaryPage from "./pages/SummaryPage";
 import AuthenticatedWrapper from "./AuthenticatedWrapper"; // adjust the import path as needed
+import PreMain from "./pages/PreMain";
 
 const App = () => {
   return (
@@ -23,6 +24,7 @@ const App = () => {
           <Route path="/audio" element={<AuthenticatedWrapper><AudioPage /></AuthenticatedWrapper>} />
           <Route path="/viva" element={<AuthenticatedWrapper><VivaPage /></AuthenticatedWrapper> } />
           <Route path="/summary" element={<AuthenticatedWrapper><SummaryPage/></AuthenticatedWrapper> } />
+          <Route path="/premain" element={<AuthenticatedWrapper><PreMain /></AuthenticatedWrapper> } />
       </Routes>
     </BrowserRouter>
     </div>

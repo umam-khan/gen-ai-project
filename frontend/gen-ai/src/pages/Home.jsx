@@ -49,7 +49,7 @@ const Home = () => {
             {/* {isAuth ? (
               <FileUpload />
             ) : ( */}
-              <Link to="/main">
+              <Link to="/premain">
                 <button className="btn-default">
                    Get Started
                   {/* <LogIn className="w-4 h-4 ml-2" /> */}

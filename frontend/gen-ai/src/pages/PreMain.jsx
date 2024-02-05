@@ -3,22 +3,22 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import PdfUpload from "../components/PdfUpload"; // Adjust the import path as needed
 
-const MainPage = () => {
-  const [isPdfUploaded, setIsPdfUploaded] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); // State to track the upload progress
+const PreMain = () => {
+//   const [isPdfUploaded, setIsPdfUploaded] = useState(false);
+//   const [isLoading, setIsLoading] = useState(false); // State to track the upload progress
 
-  const handleUploadStart = () => {
-    setIsLoading(true); // Activate loading state
-  };
+//   const handleUploadStart = () => {
+//     setIsLoading(true); // Activate loading state
+//   };
 
-  const handleUploadSuccess = (success) => {
-    setIsPdfUploaded(success);
-    setIsLoading(false); // Deactivate loading state
-  };
+//   const handleUploadSuccess = (success) => {
+//     setIsPdfUploaded(success);
+//     setIsLoading(false); // Deactivate loading state
+//   };
 
   return (
     <div className="h-screen flex flex-col justify-center items-center space-y-5">
-      <h1 className="text-4xl  leading-11">Query Your Pdf</h1>
+      {/* <h1 className="text-4xl  leading-11">Query Your Pdf</h1>
       <PdfUpload onUploadStart={handleUploadStart} onUploadSuccess={handleUploadSuccess} />
       {isLoading && <div className="text-lg font-semibold">
 
@@ -43,9 +43,8 @@ const MainPage = () => {
         </div>
         Preparing your answer
     </li>
-</ul>
-</div>} {/* Loading indicator */}
-      {!isLoading && isPdfUploaded && (
+</ul> */}
+{/* </div>} Loading indicator */}
         <div className="flex justify-center items-center gap-10">
           {/* Links and buttons appear after successful upload */}
           <Link to="/text"><button className="btn-default">Want to Use Text</button></Link>
@@ -53,9 +52,9 @@ const MainPage = () => {
           <Link to="/viva"><button className="btn-default">Get FAQs</button></Link>
           <Link to="/summary"><button className="btn-default">Summary</button></Link>
         </div>
-      )}
+      
     </div>
   );
 };
 
-export default MainPage;
+export default PreMain;
