@@ -22,13 +22,14 @@ headers = {"Authorization": "Bearer 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"}
 @app.route('/getpdf', methods=['POST'])
 def get_pdf():
     try:
-        pdf_file = request.files.get('pdf')
+        #pdf_file = request.files.get('pdf')
+        pdf_file = ""
         print(pdf_file)
         if pdf_file:
-            pdf_file.save(os.path.join(os.getcwd(), 'uploaded_pdf.pdf'))
-            pdf_path = "C:\\Users\\Anand\\Desktop\\hack\\gen-ai-project\\frontend\\gen-ai\\dummyflaskbackend\\uploaded_pdf.pdf"
+            directory_path="C:\\Users\\Anand\\Desktop\\hack\\gen-ai-project\\frontend\\gen-ai\\dummyflaskbackend\\data"
+            pdf_file.save(os.path.join( directory_path, f'data{uuid.uuid4()}.pdf'))
             print('PDF file saved successfully')
-            raw_text = get_pdf_text(pdf_path)
+            raw_text = read_pdfs_in_directory(directory_path)
             text_chunks = get_text_chunks(raw_text)
             get_vector_store(text_chunks)
             return jsonify({"success": True, "message": "PDF received and saved successfully"})
@@ -39,14 +40,14 @@ def get_pdf():
     return jsonify({"success": False, "message": "Error processing PDF"})
 
 ##get AUDIO
-@app.route('/audio', methods=['GET'])
+@app.route('/audio2', methods=['GET'])
 def serve_audio():
     file_path = "C:/Users/Anand/Desktop/hack/gen-ai-project/frontend/gen-ai/dummyflaskbackend/final_output.wav"
     return send_file(file_path, mimetype='audio/wav')
 
-
 #get getaudio
 def mp3_to_text_hindi(data):
+    print("Generating transcript")
     API_URL = "https://api-inference.huggingface.co/models/openai/whisper-large-v3"
     headers = {"Authorization": "Bearer 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"}
     response = requests.post(API_URL, headers=headers, data=data)
@@ -55,12 +56,14 @@ def mp3_to_text_hindi(data):
 
 
 def english_to_hindi(english_text):
+    print("translating")
     translator = Translator(to_lang="hi", from_lang='en')
     translated_text = translator.translate(english_text)
     return translated_text
 
 
 def hindi_text_to_mp3(text):
+    print("generating audio")
     language = 'hi'
     speed = False
     tts = gTTS(text=text, lang=language, slow=speed)
@@ -73,6 +76,7 @@ def hindi_text_to_mp3(text):
 
 
 def mp3_to_text_english(data):
+    print("generating text")
     API_URL = "https://api-inference.huggingface.co/models/openai/whisper-large-v3"
     headers = {"Authorization": "Bearer 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"}
     response = requests.post(API_URL, headers=headers, data=data)
@@ -81,6 +85,7 @@ def mp3_to_text_english(data):
 
 
 def english_text_to_mp3(text):
+    print("generating audio")
     language = 'en'
     speed = False
     tts = gTTS(text=text, lang=language, slow=speed)
@@ -93,6 +98,7 @@ def english_text_to_mp3(text):
 
 
 def mp3_to_text_marathi(data):
+    print("generating text")
     API_URL = "https://api-inference.huggingface.co/models/openai/whisper-large-v3"
     headers = {"Authorization": "Bearer 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"}
     response = requests.post(API_URL, headers=headers, data=data)
@@ -100,12 +106,14 @@ def mp3_to_text_marathi(data):
     return result['text']
 
 def english_to_marathi(english_text):
+    print("translating")
     translator = Translator(to_lang="mr", from_lang='en')
     translated_text = translator.translate(english_text)
     return translated_text
 
 
 def marathi_text_to_mp3(text):
+    print("generating audio")
     language = 'mr'
     speed = False
     tts = gTTS(text=text, lang=language, slow=speed)
@@ -118,6 +126,7 @@ def marathi_text_to_mp3(text):
 
 
 def mp3_to_text_tamil(data):
+    print("generating text")
     API_URL = "https://api-inference.huggingface.co/models/openai/whisper-large-v3"
     headers = {"Authorization": "Bearer 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"}
     response = requests.post(API_URL, headers=headers, data=data)
@@ -125,12 +134,14 @@ def mp3_to_text_tamil(data):
     return result['text']
 
 def english_to_tamil(english_text):
+    print("translating")
     translator = Translator(to_lang="ta", from_lang='en')
     translated_text = translator.translate(english_text)
     return translated_text
 
 
 def tamil_text_to_mp3(text):
+    print("generating audio")
     language = 'ta'
     speed = False
     tts = gTTS(text=text, lang=language, slow=speed)
@@ -142,7 +153,7 @@ def tamil_text_to_mp3(text):
     return "done"
 
 #getaudio
-@app.route('/getaudio', methods=['POST'])
+@app.route('/getaudio', methods=['POST','GET'])
 def getaudio():
     try:
         input_lang = request.form.get('language')
@@ -214,30 +225,27 @@ def getaudio():
     return jsonify({"success": False, "message": "Error"})
 
 #getviva
-@app.route('/getviva', methods=['POST'])
+@app.route('/getviva', methods=['POST','GET'])
 def getviva():
     try:
-        question="Viva Questions"
-        viva_result = main_viva(question)
-        print(viva_result)        
-        hindi_result = english_to_hindi(viva_result)
-        return jsonify({"hindi":hindi_result,"english":viva_result,"success":True})
+        question="Generate Viva Questions"
+        viva_result = main_viva(question)   
+        return jsonify({"english":viva_result,"success":True})
     except Exception as e:
         print(f"Error: {str(e)}")
         return jsonify({"success": False, "message": "Error"})    
 
 #getsummary
-@app.route('/getsummary',methods=['POST'])
+@app.route('/getsummary',methods=['POST','GET'])
 def getsummmary():
     try:
-        question="Summarize"
+        question="Generate Summary"
         summ_result = mainsumm(question)        
-        hindi_result = english_to_hindi(summ_result)
-        return jsonify({"hindi":hindi_result,"english":summ_result,"success":True})
+        return jsonify({"english":summ_result,"success":True})
     except Exception as e:
         print(f"Error: {str(e)}")
         return jsonify({"success": False, "message": "Error"}) 
-
+    
 
 def hindi_to_english(english_text):
     translator = Translator(to_lang="en", from_lang='hi')
@@ -258,12 +266,14 @@ def tamil_to_english(english_text):
 
 
 #gettext
-@app.route('/gettext', methods=['POST'])
+@app.route('/gettext', methods=['POST','GET'])
 def gettext():
     try:
-        input_text= request.form.get('text')
-        input_lang = request.form.get('language')
+        #input_text= request.form.get('text')
+        #input_lang = request.form.get('language')
+        input_text = "Are vaccines helpful to fight covid-19? If yes, tell some vaccine names"
         print(input_text)
+        input_lang = "english"
         print(input_lang)
         if input_lang=='hindi':
             tt_hin_eng = hindi_to_english(input_text)
@@ -288,7 +298,7 @@ def gettext():
     except Exception as e:
         print(f"Error: {str(e)}")
 
-    return jsonify({"success": False, "message": "Error"})    
+    return jsonify({"success": False, "message": "Error"}) 
 
 
 if __name__ == '__main__':

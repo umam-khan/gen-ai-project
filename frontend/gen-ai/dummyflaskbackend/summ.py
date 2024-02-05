@@ -16,7 +16,21 @@ genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
 def get_conversational_chain_sum():
     prompt_template = """
-    Summarize the main topics covered in the provided context, focusing on the key points and themes. Provide a numbered bulleted list of topics for clarity . If the context is too vague or insufficient for a detailed summary, indicate this by stating, "The context provided does not contain enough information for a detailed summary." \n\n
+    Given the content extracted from an educational PDF, your task is to generate a comprehensive summary that distills the essential information contained within. This summary should be structured to provide educators, students, and academicians with a clear and concise understanding of the material's main topics, theories, methodologies, results, and any conclusions or implications discussed. The summary must adhere to the following guidelines:
+
+1. **Introduction**: Briefly introduce the main subject or field of study of the PDF. Mention the purpose or objective of the document if explicitly stated.
+
+2. **Key Concepts and Theories**: Identify and summarize the key concepts, theories, or frameworks introduced in the document. Provide a brief explanation of each, emphasizing their significance to the subject matter.
+
+3. **Methodology**: If the document includes empirical research, describe the methodology used in a succinct manner. This includes the research design, data collection methods, and analytical techniques.
+
+4. **Findings or Main Points**: Summarize the primary findings, arguments, or points made in the document. Highlight any significant data, results, or conclusions drawn by the authors.
+
+5. **Implications or Applications**: Discuss the implications or potential applications of the material. This could include how the findings might affect future research, policy, practice, or the field of study in general.
+
+6. **Conclusion**: Provide a conclusion that encapsulates the overall essence of the document, including any final thoughts, recommendations, or calls to action made by the authors.
+
+If the document's content is too broad or does not provide sufficient detail for a comprehensive summary, please note this by stating, "The content of the provided document is too broad or lacks the necessary detail for a comprehensive summary." Ensure the summary is clear, well-organized, accessible to individuals and each topic is in brief with a basic understanding of the subject matter. After ending of each toppic, generate a topic in a new line
     Context:\n{context}\n
 
     Summary of Topics:

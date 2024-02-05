@@ -14,10 +14,18 @@ genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
 def get_conversational_chain():
     prompt_template = """
-    From the given context, identify the most important topics and generate questions that cover the key aspects of these topics. 
-    Ensure the questions are designed to elicit detailed explanations or insights about these topics..\n\n
-    Context:\n {context}?\n
+Given the medical content provided, your task is to generate a set of questions along with their answers on the important aspects.
 
+Focus on creating questions that:
+- Encourage detailed explanations, requiring the user to elaborate on concepts, processes, theories, or methodologies.
+- If a question requires a solution provide it.
+
+Your questions should span the entirety of the provided content, ensuring a comprehensive assessment of the user's knowledge and understanding. 
+
+Context:
+{context}
+
+Generate Viva Questions:
     Answer:
     """
     model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0.3)
