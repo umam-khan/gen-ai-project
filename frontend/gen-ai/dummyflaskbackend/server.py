@@ -22,8 +22,7 @@ headers = {"Authorization": "Bearer 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"}
 @app.route('/getpdf', methods=['POST'])
 def get_pdf():
     try:
-        #pdf_file = request.files.get('pdf')
-        pdf_file = ""
+        pdf_file = request.files.get('pdf')
         print(pdf_file)
         if pdf_file:
             directory_path="C:\\Users\\Anand\\Desktop\\hack\\gen-ai-project\\frontend\\gen-ai\\dummyflaskbackend\\data"
@@ -269,12 +268,8 @@ def tamil_to_english(english_text):
 @app.route('/gettext', methods=['POST','GET'])
 def gettext():
     try:
-        #input_text= request.form.get('text')
-        #input_lang = request.form.get('language')
-        input_text = "Are vaccines helpful to fight covid-19? If yes, tell some vaccine names"
-        print(input_text)
-        input_lang = "english"
-        print(input_lang)
+        input_text= request.form.get('text')
+        input_lang = request.form.get('language')
         if input_lang=='hindi':
             tt_hin_eng = hindi_to_english(input_text)
             text_query_pdf = starting_point(tt_hin_eng)

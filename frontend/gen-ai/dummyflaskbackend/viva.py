@@ -14,13 +14,13 @@ genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
 def get_conversational_chain():
     prompt_template = """
-Given the medical content provided, your task is to generate a set of questions along with their answers on the important aspects.
+"Generate a comprehensive list of FAQs for all the health problems covered from the current knowledge base. Provide detailed answers that reflect the latest research and data for each question. Ensure the FAQs address common concerns, symptoms, treatments, and preventive measures for each condition included in our dataset."
 
 Focus on creating questions that:
-- Encourage detailed explanations, requiring the user to elaborate on concepts, processes, theories, or methodologies.
+- Encourage detailed explanations, requiring the user to elaborate on concepts, processes, theories, or methodologies for all the health problems.
 - If a question requires a solution provide it.
 
-Your questions should span the entirety of the provided content, ensuring a comprehensive assessment of the user's knowledge and understanding. 
+Your questions should span the entirety of the provided contents covering questions from each of the problem, ensuring a comprehensive assessment of the user's knowledge and understanding. 
 
 Context:
 {context}
@@ -28,7 +28,7 @@ Context:
 Generate Viva Questions:
     Answer:
     """
-    model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0.3)
+    model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0.4)
 
     prompt = PromptTemplate(template = prompt_template, input_variables = ["context"])
     chain = load_qa_chain(model, chain_type="stuff", prompt=prompt)

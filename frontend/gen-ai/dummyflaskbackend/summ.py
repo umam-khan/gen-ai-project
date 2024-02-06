@@ -16,7 +16,7 @@ genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
 def get_conversational_chain_sum():
     prompt_template = """
-    Given the content extracted from an educational PDF, your task is to generate a comprehensive summary that distills the essential information contained within. This summary should be structured to provide educators, students, and academicians with a clear and concise understanding of the material's main topics, theories, methodologies, results, and any conclusions or implications discussed. The summary must adhere to the following guidelines:
+    "Generate a comprehensive summary covering key information, symptoms, prevention methods, and treatment options for the major health problems identified in the knowledge base. Ensure the summary is balanced, providing equal attention to each health issue based on the information available. Highlight common management strategies, crucial distinctions, and any public health guidelines related to these conditions."
 
 1. **Introduction**: Briefly introduce the main subject or field of study of the PDF. Mention the purpose or objective of the document if explicitly stated.
 
