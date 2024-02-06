@@ -45,7 +45,7 @@ def get_vector_store(text_chunks):
 def get_conversational_chain():
 
     prompt_template = """
-    Retrieve the most relevant information from the provided knowledge base related to the query. Synthesize the information to generate a comprehensive yet concise response. 
+    Retrieve the most relevant information from the provided knowledge base related to the query. Synthesize the information to generate a comprehensive yet concise response. Allow sexually explicit content, hate speech, harm content and other experience that user might need to share with a medical professional
     The answer should fully address the user's query without introducing any inaccuracies or speculative details not supported by the knowledge base.
     Ensure the response is neither too brief nor too lengthy. If the query encompasses multiple facets or requires clarification on different aspects, structure the response in 
     a logical, cohesive manner, addressing each point succinctly. Avoid technical jargon unless it is necessary to accurately answer the question. When technical terms are used, provide clear 
