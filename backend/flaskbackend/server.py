@@ -15,8 +15,7 @@ import uuid
 app = Flask(__name__)
 CORS(app)
 
-API_URL = "https://api-inference.huggingface.co/models/openai/whisper-large-v3"
-headers = {"Authorization": "Bearer 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"}
+HUGGINGFACE_API_KEY = os.getenv('HUGGING_FACE_KEY')
 
 ###GET PDF 
 @app.route('/getpdf', methods=['POST'])
@@ -25,7 +24,7 @@ def get_pdf():
         pdf_file = request.files.get('pdf')
         print(pdf_file)
         if pdf_file:
-            directory_path="C:\\Users\\Anand\\Desktop\\hack\\gen-ai-project\\frontend\\gen-ai\\dummyflaskbackend\\data"
+            directory_path="C:\\Users\\Anand\\Desktop\\hack\\gen-ai-project\\backend\\flaskbackend\\data"
             pdf_file.save(os.path.join( directory_path, f'data{uuid.uuid4()}.pdf'))
             print('PDF file saved successfully')
             raw_text = read_pdfs_in_directory(directory_path)
@@ -41,14 +40,14 @@ def get_pdf():
 ##get AUDIO
 @app.route('/audio2', methods=['GET'])
 def serve_audio():
-    file_path = "C:/Users/Anand/Desktop/hack/gen-ai-project/frontend/gen-ai/dummyflaskbackend/final_output.wav"
+    file_path = "C:\\Users\\Anand\\Desktop\\hack\\gen-ai-project\\backend\\flaskbackend/final_output.wav"
     return send_file(file_path, mimetype='audio/wav')
 
 #get getaudio
 def mp3_to_text_hindi(data):
     print("Generating transcript")
     API_URL = "https://api-inference.huggingface.co/models/openai/whisper-large-v3"
-    headers = {"Authorization": "Bearer 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"}
+    headers = {"Authorization": HUGGINGFACE_API_KEY}
     response = requests.post(API_URL, headers=headers, data=data)
     result =  response.json()
     return result['text']
@@ -77,7 +76,7 @@ def hindi_text_to_mp3(text):
 def mp3_to_text_english(data):
     print("generating text")
     API_URL = "https://api-inference.huggingface.co/models/openai/whisper-large-v3"
-    headers = {"Authorization": "Bearer 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"}
+    headers = {"Authorization": HUGGINGFACE_API_KEY}
     response = requests.post(API_URL, headers=headers, data=data)
     result= response.json()
     return result['text']
@@ -99,7 +98,7 @@ def english_text_to_mp3(text):
 def mp3_to_text_marathi(data):
     print("generating text")
     API_URL = "https://api-inference.huggingface.co/models/openai/whisper-large-v3"
-    headers = {"Authorization": "Bearer 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"}
+    headers = {"Authorization": HUGGINGFACE_API_KEY}
     response = requests.post(API_URL, headers=headers, data=data)
     result =  response.json()
     return result['text']
@@ -127,7 +126,7 @@ def marathi_text_to_mp3(text):
 def mp3_to_text_tamil(data):
     print("generating text")
     API_URL = "https://api-inference.huggingface.co/models/openai/whisper-large-v3"
-    headers = {"Authorization": "Bearer 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"}
+    headers = {"Authorization": HUGGINGFACE_API_KEY}
     response = requests.post(API_URL, headers=headers, data=data)
     result =  response.json()
     return result['text']
