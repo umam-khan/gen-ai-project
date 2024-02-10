@@ -9,6 +9,7 @@ import VivaPage from "./pages/VivaPage";
 import SummaryPage from "./pages/SummaryPage";
 import AuthenticatedWrapper from "./AuthenticatedWrapper"; // adjust the import path as needed
 import PreMain from "./pages/PreMain";
+import Audiopage2 from "./pages/Audiopage2";
 
 const App = () => {
   return (
@@ -25,6 +26,7 @@ const App = () => {
           <Route path="/viva" element={<AuthenticatedWrapper><VivaPage /></AuthenticatedWrapper> } />
           <Route path="/summary" element={<AuthenticatedWrapper><SummaryPage/></AuthenticatedWrapper> } />
           <Route path="/premain" element={<AuthenticatedWrapper><PreMain /></AuthenticatedWrapper> } />
+          <Route path="/audio2" element={<AuthenticatedWrapper><Audiopage2 /></AuthenticatedWrapper> } />
       </Routes>
     </BrowserRouter>
     </div>
