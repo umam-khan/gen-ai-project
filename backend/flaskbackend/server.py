@@ -16,7 +16,8 @@ app = Flask(__name__)
 CORS(app)
 
 HUGGINGFACE_API_KEY = os.getenv('HUGGING_FACE_KEY')
-
+data_dir = os.getenv( 'DATA_DIR', './data/' )
+fin_out = os.getenv('OUTPUT_DIR', './final_output.wav')
 ###GET PDF 
 @app.route('/getpdf', methods=['POST'])
 def get_pdf():
@@ -24,7 +25,7 @@ def get_pdf():
         pdf_file = request.files.get('pdf')
         print(pdf_file)
         if pdf_file:
-            directory_path="C:\\Users\\Anand\\Desktop\\hack\\gen-ai-project\\backend\\flaskbackend\\data"
+            directory_path=data_dir
             pdf_file.save(os.path.join( directory_path, f'data{uuid.uuid4()}.pdf'))
             print('PDF file saved successfully')
             raw_text = read_pdfs_in_directory(directory_path)
@@ -40,7 +41,7 @@ def get_pdf():
 ##get AUDIO
 @app.route('/audio2', methods=['GET'])
 def serve_audio():
-    file_path = "C:\\Users\\Anand\\Desktop\\hack\\gen-ai-project\\backend\\flaskbackend/final_output.wav"
+    file_path = fin_out
     return send_file(file_path, mimetype='audio/wav')
 
 #get getaudio

@@ -1,6 +1,6 @@
 .env
 uploaded_pdf.pdf
-faiss_index
 recordedAudio.weba
 arif
-data
+data 
+faiss_index

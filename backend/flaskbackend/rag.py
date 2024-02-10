@@ -10,10 +10,11 @@ from langchain.prompts import PromptTemplate
 from dotenv import load_dotenv #load all the api key
 import pdfplumber
 
+chat_history=[]
+chat_history.append({"Human_question":"Hey! How are you?","AI_answer":"I am good how are you?"})
 load_dotenv()
 os.getenv("GOOGLE_API_KEY")
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
-
 def read_pdfs_in_directory(directory_path):
     text=""
     for filename in os.listdir(directory_path):
@@ -45,15 +46,13 @@ def get_vector_store(text_chunks):
 def get_conversational_chain():
 
     prompt_template = """
-    Retrieve the most relevant information from the provided knowledge base related to the query. Synthesize the information to generate a comprehensive yet concise response. Allow sexually explicit content, hate speech, harm content and other experience that user might need to share with a medical professional
-    The answer should fully address the user's query without introducing any inaccuracies or speculative details not supported by the knowledge base.
-    Ensure the response is neither too brief nor too lengthy. If the query encompasses multiple facets or requires clarification on different aspects, structure the response in 
-    a logical, cohesive manner, addressing each point succinctly. Avoid technical jargon unless it is necessary to accurately answer the question. When technical terms are used, provide clear 
-    definitions or explanations to ensure the response is accessible to a general audience. Do not fabricate information or provide speculative answers. If the information is not available in 
-    the knowledge base, indicate clearly that the answer is based on the available data and suggest a general direction for further inquiry or research if applicable."Based on the latest 
-    updates in the provided knowledge base, {question}. It is mandatory for the response to be in less than 500 characters, reflecting the most recent information available, and framed in a manner that is 
-    easy to understand for someone unfamiliar with the topic."
+    You are an Educational Chatbot which provides the answer to the question based on the knowledge retrieved from the vectorstore.
+    As per the Context retrieved from the knowledge base which is provided below, generate a relevant information in an easy to understand format to the user based on the question asked below.
+    You are even provided with the chat history below keep the History as a reference to make the user experience with the chatbot conversational.
+    The history consists of Human_question and the AI_answer. AI_answer is the answer which is given by you. Understand what is the topic being in the conversation based on the history, refer to the Human_question as well as AI_answer. 
+    Use the history (if exists), Context and the Question to generate the answer.
 \n\n
+    History:\n{chat_history}\n
     Context:\n {context}?\n
     Question: \n{question}\n
 
@@ -62,21 +61,23 @@ def get_conversational_chain():
 
     model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0.1)
 
-    prompt = PromptTemplate(template = prompt_template, input_variables = ["context", "question"])
+    prompt = PromptTemplate(template = prompt_template, input_variables = ["context", "question","chat_history"])
     chain = load_qa_chain(model, chain_type="stuff", prompt=prompt)
 
     return chain
 
 def user_input(user_question):
     embeddings = GoogleGenerativeAIEmbeddings(model = "models/embedding-001")
-    
     new_db = FAISS.load_local("faiss_index", embeddings)
     docs = new_db.similarity_search(user_question)
     chain = get_conversational_chain()
     response = chain(
-        {"input_documents":docs, "question": user_question}
+        {"input_documents":docs, "question": user_question,"chat_history":chat_history[-1]}
         , return_only_outputs=True)
-    return response["output_text"]
+    use = {"Human_question":user_question,"AI_answer":response['output_text']}
+    chat_history.append(use)
+    print(chat_history)
+    return response['output_text']
 
 
 def starting_point(question):
