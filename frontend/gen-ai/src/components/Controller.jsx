@@ -3,9 +3,11 @@ import Title from './Title';
 import { useState } from 'react';
 import RecordMessage from './RecordMessage';
 import axios from 'axios';
+import Dropdown from './Dropdown';
 const Controller = () => {
     const [isLoading, setIsLoading] =useState(false);
     const [messages, setMessages] =useState([]);
+    const [selectedLanguage, setSelectedLanguage] = useState("english");
 
     const createBlobUrl = (data) => {
         const blob = new Blob([data],{type : "audio/mpeg"})
@@ -25,15 +27,16 @@ const Controller = () => {
         fetch(blobUrl)
         .then((res) => res.blob())
         .then(async (blob) => {
-            //sending audio file to backend
+            //sending audio file to backend AND selected language 
             const formData = new FormData();
             formData.append("file",blob,"myFile.wav")
+            formData.append("language", selectedLanguage);
 
             //send form data to endpoint 
 
             await axios
             .post("http://localhost:8000/post-audio", formData , {
-                headers : {"Content-Type" : "audio/mpeg"},
+                // headers : {"Content-Type" : "audio/mpeg"},
                 responseType : "arraybuffer",
             })
             .then((res) => {
@@ -84,7 +87,10 @@ const Controller = () => {
                 })}
 
                 {messages.length == 0 && !isLoading && (
+                    <div className='flex flex-col items-center'>
                     <div className='text-center font-light italic mt-10'>send john a message...</div>
+                    <Dropdown setSelectedLanguageMain={setSelectedLanguage} />
+                    </div>
                 )}
                 {isLoading && (
                     <div className='text-center font-light italic mt-10 animate-pulse'>please wait a moment...</div>
