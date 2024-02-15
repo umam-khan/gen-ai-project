@@ -30,7 +30,7 @@ const Controller = () => {
             //sending audio file to backend AND selected language 
             const formData = new FormData();
             formData.append("file",blob,"myFile.wav")
-            formData.append("language", selectedLanguage);
+            // formData.append("language", selectedLanguage);
 
             //send form data to endpoint 
 

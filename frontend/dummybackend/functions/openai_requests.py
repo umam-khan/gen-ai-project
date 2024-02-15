@@ -1,12 +1,11 @@
 import openai
-from decouple import config
 
 #import custom functions
 from functions.database import get_recent_messages
 
 #get env variables
-openai.organization=config("OPEN_AI_ORG")
-openai.api_key=config("OPEN_AI_KEY")
+openai.organization="org-B2yqYB2USBVaJDDvulebKrlP"
+openai.api_key="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"
 
 #open ai - whisper - audio to text
 
@@ -29,7 +28,7 @@ def get_chat_response(message_input):
     }
     messages.append(user_message)
 
-    print(messages)
+    print(f"\nThis is messages\n\n{messages}")
 
     try:
         response = openai.ChatCompletion.create(

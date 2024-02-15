@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 import requests
-from translate import Translator
+from deep_translator import GoogleTranslator
 import os, io, base64
 from pydub import AudioSegment
 import speech_recognition as sr
@@ -11,6 +11,7 @@ from viva import *
 from summ import *
 from gtts import gTTS
 import uuid
+from openai import OpenAI
 
 app = Flask(__name__)
 CORS(app)
@@ -46,19 +47,21 @@ def serve_audio():
 
 #get getaudio
 def mp3_to_text_hindi(data):
-    print("Generating transcript")
-    API_URL = "https://api-inference.huggingface.co/models/openai/whisper-large-v3"
-    headers = {"Authorization": HUGGINGFACE_API_KEY}
-    response = requests.post(API_URL, headers=headers, data=data)
-    result =  response.json()
-    return result['text']
+    client = OpenAI(api_key="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")
+    audio_file= open(data, "rb")
+    transcript = client.audio.transcriptions.create(
+        model="whisper-1", 
+        file=audio_file,
+        language="hi",
+        response_format="text"
+    )
+    return transcript
 
 
 def english_to_hindi(english_text):
     print("translating")
-    translator = Translator(to_lang="hi", from_lang='en')
-    translated_text = translator.translate(english_text)
-    return translated_text
+    translated = GoogleTranslator(source='en',target='hi').translate(english_text)
+    return translated
 
 
 def hindi_text_to_mp3(text):
@@ -75,12 +78,15 @@ def hindi_text_to_mp3(text):
 
 
 def mp3_to_text_english(data):
-    print("generating text")
-    API_URL = "https://api-inference.huggingface.co/models/openai/whisper-large-v3"
-    headers = {"Authorization": HUGGINGFACE_API_KEY}
-    response = requests.post(API_URL, headers=headers, data=data)
-    result= response.json()
-    return result['text']
+    client = OpenAI(api_key="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")
+    audio_file= open(data, "rb")
+    transcript = client.audio.transcriptions.create(
+        model="whisper-1", 
+        file=audio_file,
+        language="en",
+        response_format="text"
+    )
+    return transcript
 
 
 def english_text_to_mp3(text):
@@ -97,18 +103,21 @@ def english_text_to_mp3(text):
 
 
 def mp3_to_text_marathi(data):
-    print("generating text")
-    API_URL = "https://api-inference.huggingface.co/models/openai/whisper-large-v3"
-    headers = {"Authorization": HUGGINGFACE_API_KEY}
-    response = requests.post(API_URL, headers=headers, data=data)
-    result =  response.json()
-    return result['text']
+    client = OpenAI(api_key="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")
+    audio_file= open(data, "rb")
+    transcript = client.audio.transcriptions.create(
+        model="whisper-1", 
+        file=audio_file,
+        language="mr",
+        response_format="text"
+    )
+    return transcript
+
 
 def english_to_marathi(english_text):
     print("translating")
-    translator = Translator(to_lang="mr", from_lang='en')
-    translated_text = translator.translate(english_text)
-    return translated_text
+    translated = GoogleTranslator(source='en',target='mr').translate(english_text)
+    return translated
 
 
 def marathi_text_to_mp3(text):
@@ -125,18 +134,20 @@ def marathi_text_to_mp3(text):
 
 
 def mp3_to_text_tamil(data):
-    print("generating text")
-    API_URL = "https://api-inference.huggingface.co/models/openai/whisper-large-v3"
-    headers = {"Authorization": HUGGINGFACE_API_KEY}
-    response = requests.post(API_URL, headers=headers, data=data)
-    result =  response.json()
-    return result['text']
+    client = OpenAI(api_key="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")
+    audio_file= open(data, "rb")
+    transcript = client.audio.transcriptions.create(
+        model="whisper-1", 
+        file=audio_file,
+        language="ta",
+        response_format="text"
+    )
+    return transcript
 
 def english_to_tamil(english_text):
     print("translating")
-    translator = Translator(to_lang="ta", from_lang='en')
-    translated_text = translator.translate(english_text)
-    return translated_text
+    translated = GoogleTranslator(source='en',target='ta').translate(english_text)
+    return translated
 
 
 def tamil_text_to_mp3(text):
@@ -151,6 +162,23 @@ def tamil_text_to_mp3(text):
     os.remove("output.mp3")
     return "done"
 
+
+def hindi_to_english(english_text):
+    translated = GoogleTranslator(source='hi',target='en').translate(english_text)
+    return translated
+
+
+def marathi_to_english(english_text):
+    translated = GoogleTranslator(source='mr',target='en').translate(english_text)
+    return translated  
+
+
+def tamil_to_english(english_text):
+    translated = GoogleTranslator(source='ta',target='en').translate(english_text)
+    return translated  
+
+
+
 #getaudio
 @app.route('/getaudio', methods=['POST','GET'])
 def getaudio():
@@ -163,28 +191,32 @@ def getaudio():
         sf.write("output.wav", audio.get_array_of_samples(), audio.frame_rate)
         file_path="output.wav"
         if input_lang=='hindi':
-            with open(file_path, "rb") as f:
-                data = f.read()
             stt_hindi=''
-            stt_hindi = mp3_to_text_hindi(data)
+            stt_hindi = mp3_to_text_hindi(file_path)
             print(stt_hindi)
             print('\n\n')
-            text_query_pdf = starting_point(stt_hindi)
+            tt_hin_eng = hindi_to_english(stt_hindi)
+            print(tt_hin_eng)
+            print('\n\n')
+            text_query_pdf = starting_point(tt_hin_eng)
+            print(text_query_pdf)
+            print('\n\n')
             tt_eng_hin = english_to_hindi(text_query_pdf)#replace tt_hin_eng with text_query_pdf
             print(tt_eng_hin)
             print('\n\n')
             tts_hindi = hindi_text_to_mp3(tt_eng_hin)
-            print(tts_hindi)
-            print('\n\n')
             return jsonify({"text":tt_eng_hin, "success": True})
         elif input_lang == 'marathi':
-            with open(file_path, "rb") as f:
-                data = f.read()
             stt_marathi=''
-            stt_marathi = mp3_to_text_marathi(data)
+            stt_marathi = mp3_to_text_marathi(file_path)
             print(stt_marathi)
             print('\n\n')
-            text_query_pdf = starting_point(stt_marathi)
+            tt_mar_eng = marathi_to_english(stt_marathi)
+            print(tt_mar_eng)
+            print('\n\n')
+            text_query_pdf = starting_point(tt_mar_eng)
+            print(text_query_pdf)
+            print('\n\n')
             tt_eng_mar = english_to_marathi(text_query_pdf)#replace tt_hin_eng with text_query_pdf
             print(tt_eng_mar)
             print('\n\n')
@@ -193,13 +225,16 @@ def getaudio():
             print('\n\n')
             return jsonify({"text":tt_eng_mar, "success": True})
         elif input_lang == 'tamil':
-            with open(file_path, "rb") as f:
-                data = f.read()
             stt_tamil=''
-            stt_tamil = mp3_to_text_tamil(data)
+            stt_tamil = mp3_to_text_tamil(file_path)
             print(stt_tamil)
             print('\n\n')
-            text_query_pdf = starting_point(stt_tamil)
+            tt_tam_eng = tamil_to_english(stt_tamil)
+            print(tt_tam_eng)
+            print('\n\n')
+            text_query_pdf = starting_point(tt_tam_eng)
+            print(text_query_pdf)
+            print('\n\n')
             tt_eng_tam = english_to_tamil(text_query_pdf)#replace tt_hin_eng with text_query_pdf
             print(tt_eng_tam)
             print('\n\n')
@@ -208,9 +243,7 @@ def getaudio():
             print('\n\n')
             return jsonify({"text":tt_eng_tam, "success": True})
         else:
-            with open(file_path, 'rb') as audio_file:
-                audio_content = audio_file.read()
-            stt_english = mp3_to_text_english(audio_content)
+            stt_english = mp3_to_text_english(file_path)
             print(stt_english)
             print('\n\n')
             text_query_pdf = starting_point(stt_english)
@@ -246,22 +279,7 @@ def getsummmary():
         return jsonify({"success": False, "message": "Error"}) 
     
 
-def hindi_to_english(english_text):
-    translator = Translator(to_lang="en", from_lang='hi')
-    translated_text = translator.translate(english_text)
-    return translated_text
 
-
-def marathi_to_english(english_text):
-    translator = Translator(to_lang="en", from_lang='mr')
-    translated_text = translator.translate(english_text)
-    return translated_text    
-
-
-def tamil_to_english(english_text):
-    translator = Translator(to_lang="en", from_lang='ta')
-    translated_text = translator.translate(english_text)
-    return translated_text    
 
 
 #gettext

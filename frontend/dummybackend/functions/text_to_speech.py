@@ -1,7 +1,7 @@
 import requests
-from decouple import config
 
-ELEVEN_LABS_API_KEY= config("ELEVEN_LABS_API_KEY")
+
+ELEVEN_LABS_API_KEY= "65eab46032a07ce4c74712066ae2221f"
 
 #eleven labs - convert text to speech
 
@@ -27,12 +27,17 @@ def convert_text_to_speech(message):
     try:
         response = requests.post(endpoint,json=body,headers=headers)
     except Exception as e:
+        print("could not get audio")
         return
 
     #handle response
     if response.status_code == 200:
+        print(response.content)
         return response.content
     else:
+        print(response.status_code)
+        print("sorry cant do")
+        print(response)
         return
     
         

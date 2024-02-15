@@ -14,19 +14,24 @@ genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
 def get_conversational_chain():
     prompt_template = """
-"Generate a comprehensive list of FAQs for all the health problems covered from the current knowledge base. Provide detailed answers that reflect the latest research and data for each question. Ensure the FAQs address common concerns, symptoms, treatments, and preventive measures for each condition included in our dataset."
+Analyze the provided context below carefully. From your analysis, generate a set of Viva questions along with their corresponding answers. Ensure that these questions:
 
-Focus on creating questions that:
-- Encourage detailed explanations, requiring the user to elaborate on concepts, processes, theories, or methodologies for all the health problems.
-- If a question requires a solution provide it.
-
-Your questions should span the entirety of the provided contents covering questions from each of the problem, ensuring a comprehensive assessment of the user's knowledge and understanding. 
-
+Cover the main topics, theories, and concepts discussed in the document.
+Include definitions, explanations, and illustrations of critical terms and ideas.
+Encompass questions on methods, approaches, or experiments described, asking for explanations on how they are conducted or why they are used.
+Probe for significant findings, results, and the reasoning behind conclusions drawn in the study.
+Test understanding of the implications or applications of the research findings.
+Ask for comparisons or contrasts between theories, methods, or results where relevant.
+Include a mix of straightforward factual questions, as well as more complex analytical or evaluative questions to assess deeper understanding.
+For each question, provide a concise, accurate answer based on the content of the PDF. The answers should be informative and clear enough to stand alone for someone studying the subject. Structure the questions and answers in a logical sequence, mirroring the organization of the document to facilitate an intuitive learning experience."
 Context:
 {context}
+For your example, the generated question and answer should be in this format:
 
-Generate Viva Questions:
-    Answer:
+Question: What are amines?
+Answer: In chemistry, amines are compounds and functional groups that contain a basic nitrogen atom with a lone pair. Amines are formally derivatives of ammonia, wherein one or more hydrogen atoms have been replaced by a substituent such as an alkyl or aryl group.
+
+Generate Viva Questions keeping:
     """
     model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0.4)
 
