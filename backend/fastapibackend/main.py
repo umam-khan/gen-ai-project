@@ -26,7 +26,15 @@ app.add_middleware(
 async def get_pdf(pdf_file: UploadFile = File(...)):
     try:
         if pdf_file:
-            directory_path="C:\\Users\\Anand\\Desktop\\OPENAI\\data"
+            # Get the directory of the current script
+            current_script_dir = os.path.dirname(os.path.abspath(__file__))
+
+            # Construct the path to the 'data' folder relative to the current script
+            directory_path = os.path.join(current_script_dir, 'data')
+
+            # Check if the 'data' directory exists, create it if it doesn't
+            if not os.path.exists(directory_path):
+                os.makedirs(directory_path)
             file_path = os.path.join( directory_path, 'data.pdf')
             with open(file_path, "wb") as file_object:
                 file_object.write(await pdf_file.read())
@@ -45,7 +53,7 @@ async def reset_pinecone():
 
 
 def mp3_to_text_hindi(data):
-    client = OpenAI(api_key="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")
+    client = OpenAI(api_key="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")
     transcript = client.audio.transcriptions.create(
         model="whisper-1", 
         file=data,
@@ -72,7 +80,7 @@ def hindi_text_to_mp3(text):
     return tmp_path
 
 def mp3_to_text_english(data):
-    client = OpenAI(api_key="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")
+    client = OpenAI(api_key="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")
     audio_file= open(data, "rb")
     transcript = client.audio.transcriptions.create(
         model="whisper-1", 
@@ -96,7 +104,7 @@ def english_text_to_mp3(text):
 
 
 def mp3_to_text_marathi(data):
-    client = OpenAI(api_key="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")
+    client = OpenAI(api_key="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")
     audio_file= open(data, "rb")
     transcript = client.audio.transcriptions.create(
         model="whisper-1", 
@@ -125,7 +133,7 @@ def marathi_text_to_mp3(text):
     return tmp_path
 
 def mp3_to_text_tamil(data):
-    client = OpenAI(api_key="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")
+    client = OpenAI(api_key="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")
     audio_file= open(data, "rb")
     transcript = client.audio.transcriptions.create(
         model="whisper-1", 

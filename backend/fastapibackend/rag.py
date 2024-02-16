@@ -5,6 +5,7 @@ from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.chat_models import ChatOpenAI
 from langchain.document_loaders import PyPDFLoader
 from openai import OpenAI
+import os
 
 from langchain.schema import (
     SystemMessage,
@@ -12,8 +13,8 @@ from langchain.schema import (
     AIMessage
 )
 
-OPENAI_API_KEY = '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'
-PINECONE_API_KEY = '5091e5b1-3a34-4a6a-bc03-aeb2f44f7c0c'
+OPENAI_API_KEY = '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'
+PINECONE_API_KEY = '0aa4b2eb-0188-4b6b-8243-ff27758b4517'
 pinecone.init(api_key=PINECONE_API_KEY, environment='gcp-starter')
 
 index_name = "chatbook"
@@ -38,7 +39,14 @@ text_field = "text"
 vectorstore = Pinecone(index, embed_model.embed_query,text_field)
 
 
-dir_path = "C:\\Users\\Anand\\Desktop\\OPENAI\\data\\data.pdf"
+# Get the directory of the current script
+current_script_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Construct the path to the 'data' folder relative to the current script
+data_directory_path = os.path.join(current_script_dir, 'data')
+
+# Construct the path to 'data.pdf' within the 'data' folder
+dir_path = os.path.join(data_directory_path, 'data.pdf')
 
 
 def get_pdf_text(dir_path):

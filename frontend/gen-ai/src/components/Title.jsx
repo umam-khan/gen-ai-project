@@ -7,7 +7,7 @@ const Title = ({ setMessages }) => {
 
     const resetConversation = async () => {
         setIsResetting(true);
-        await axios.get("http://localhost:8000/reset").then((res) => {
+        await axios.get("http://localhost:8000/resetpinecone").then((res) => {
             if (res.status === 200) {
                 console.log(res.data);
                 setMessages([]);

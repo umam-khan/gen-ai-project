@@ -9,7 +9,7 @@ const SummaryPage = () => {
     const fetchData = async () => {
       try {
         // Assuming your Flask backend expects a POST request
-        const response = await fetch('http://localhost:5000/getsummary', {
+        const response = await fetch('http://localhost:8000/getsummary', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

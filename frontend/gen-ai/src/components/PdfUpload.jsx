@@ -15,7 +15,7 @@ const PdfUpload = ({ onUploadStart, onUploadSuccess }) => {
       formData.append('pdf', selectedFile);
 
       try {
-        const response = await fetch('http://localhost:5000/getpdf', {
+        const response = await fetch('http://localhost:8000/getpdf', {
           method: 'POST',
           body: formData,
         });

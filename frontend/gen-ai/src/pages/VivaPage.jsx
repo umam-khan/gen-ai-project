@@ -9,7 +9,7 @@ const VivaPage = () => {
     const fetchData = async () => {
       try {
         // Assuming your Flask backend expects a POST request
-        const response = await fetch('http://localhost:5000/getviva', {
+        const response = await fetch('http://localhost:8000/getviva', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

@@ -35,7 +35,7 @@ const Controller = () => {
             //send form data to endpoint 
 
             await axios
-            .post("http://localhost:8000/post-audio", formData , {
+            .post("http://localhost:8000/getaudio", formData , {
                 // headers : {"Content-Type" : "audio/mpeg"},
                 responseType : "arraybuffer",
             })

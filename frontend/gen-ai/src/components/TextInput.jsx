@@ -10,7 +10,7 @@ const TextInput = ({ updateTextValue }) => {
     formData.append("language", selectedLanguage);
 
     try {
-      const response = await fetch("http://localhost:5000/gettext", {
+      const response = await fetch("http://localhost:8000/gettext", {
         method: "POST",
         body: formData,
       });

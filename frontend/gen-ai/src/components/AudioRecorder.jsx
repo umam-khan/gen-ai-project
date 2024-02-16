@@ -72,7 +72,7 @@ const AudioRecorder = ({ onAudioReady, updateTextValue }) => {
 
   const sendDataToServer = async (data) => {
     try {
-      const response = await fetch("http://localhost:5000/getaudio", {
+      const response = await fetch("http://localhost:8000/getaudio", {
         method: "POST",
         body: data,
       });
