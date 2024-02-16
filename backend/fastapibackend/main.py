@@ -7,8 +7,12 @@ from gtts import gTTS
 from openai import OpenAI
 from rag import *
 from tempfile import NamedTemporaryFile
+from dotenv import load_dotenv
 
+load_dotenv()
 
+OPENAI_API = os.getenv('OPENAI_API_KEY')
+PINECONE_API = os.getenv('PINECONE_API_KEY')
 
 app=FastAPI()
 
@@ -53,7 +57,7 @@ async def reset_pinecone():
 
 
 def mp3_to_text_hindi(data):
-    client = OpenAI(api_key="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")
+    client = OpenAI(api_key=OPENAI_API)
     transcript = client.audio.transcriptions.create(
         model="whisper-1", 
         file=data,
@@ -80,16 +84,16 @@ def hindi_text_to_mp3(text):
     return tmp_path
 
 def mp3_to_text_english(data):
-    client = OpenAI(api_key="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")
-    audio_file= open(data, "rb")
+    client = OpenAI(api_key=OPENAI_API)
     transcript = client.audio.transcriptions.create(
         model="whisper-1", 
-        file=audio_file,
+        file=data,
         language="en",
         response_format="text"
     )
-    print(f"This is MP3 English:\n\n{transcript}")
+    print(f"This is MP3 Hindi:\n\n{transcript}")
     return transcript
+
 
 
 def english_text_to_mp3(text):
@@ -104,11 +108,10 @@ def english_text_to_mp3(text):
 
 
 def mp3_to_text_marathi(data):
-    client = OpenAI(api_key="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")
-    audio_file= open(data, "rb")
+    client = OpenAI(api_key=OPENAI_API)
     transcript = client.audio.transcriptions.create(
         model="whisper-1", 
-        file=audio_file,
+        file=data,
         language="mr",
         response_format="text"
     )
@@ -133,11 +136,10 @@ def marathi_text_to_mp3(text):
     return tmp_path
 
 def mp3_to_text_tamil(data):
-    client = OpenAI(api_key="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")
-    audio_file= open(data, "rb")
+    client = OpenAI(api_key=OPENAI_API)
     transcript = client.audio.transcriptions.create(
         model="whisper-1", 
-        file=audio_file,
+        file=data,
         language="ta",
         response_format="text"
     )

@@ -5,7 +5,9 @@ from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.chat_models import ChatOpenAI
 from langchain.document_loaders import PyPDFLoader
 from openai import OpenAI
+from dotenv import load_dotenv
 import os
+load_dotenv()
 
 from langchain.schema import (
     SystemMessage,
@@ -13,8 +15,9 @@ from langchain.schema import (
     AIMessage
 )
 
-OPENAI_API_KEY = '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'
-PINECONE_API_KEY = '0aa4b2eb-0188-4b6b-8243-ff27758b4517'
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+PINECONE_API_KEY = os.getenv('PINECONE_API_KEY')
+
 pinecone.init(api_key=PINECONE_API_KEY, environment='gcp-starter')
 
 index_name = "chatbook"
