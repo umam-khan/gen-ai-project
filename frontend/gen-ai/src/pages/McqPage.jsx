@@ -7,7 +7,6 @@ function McqPage() {
   const [mcqs, setMcqs] = useState(null);
   const [error, setError] = useState("");
 
-  const [check, setCheck] = useState(null);
   const fetchMCQs = async (e) => {
     e.preventDefault();
     try {
@@ -18,34 +17,14 @@ function McqPage() {
           number,
         })
       );
-      setMcqs(response.data);
-      console.log(response);
-      console.log(response.data);
-      console.log(response.data[0]);
+      const jsonData = JSON.parse(response.data);
+      setMcqs(jsonData);
       setError("");
     } catch (err) {
       setError("Failed to fetch MCQs.");
       console.error(err);
     }
   };
-
-  function tryParseJSONObject(jsonString) {
-    try {
-      var o = JSON.parse(jsonString);
-
-      // Handle non-exception-throwing cases:
-      // Neither JSON.parse(false) or JSON.parse(1234) throw errors, hence the type-checking,
-      // but... JSON.parse(null) returns null, and typeof null === "object",
-      // so we must check for that, too. Thankfully, null is falsey, so this suffices:
-      if (o && typeof o === "object") {
-        console.log(`yes json`);
-        console.log(o);
-        return o;
-      }
-    } catch (e) {}
-    console.log(`not json`);
-    return false;
-  }
 
   return (
     <div className="App">
@@ -71,20 +50,19 @@ function McqPage() {
       </form>
       {error && <p style={{ color: "red" }}>{error}</p>}
       <div>
-        <div style={{ color: "red" }}>{mcqs && <p>{mcqs}</p>}</div>
-        <div style={{ color: "blue" }}>{mcqs && <p>{mcqs[0]}</p>}</div>
+        <div style={{ color: "red" }}>{mcqs && <p>{JSON.stringify(mcqs)}</p>}</div>
+        <div style={{ color: "blue" }}>
+          {mcqs && mcqs.length > 0 && (
+            <p>
+              Question: {mcqs[0].question}
+              <br />
+              Answer: {mcqs[0].answer}
+              {/* Add more fields as needed */}
+            </p>
+          )}
+        </div>
         <div style={{ color: "green" }}>
           {mcqs?.length > 0 && <p>{mcqs[0].question}</p>}
-        </div>
-        <div>
-          <button
-            onClick={() => {
-              tryParseJSONObject(mcqs);
-            }}
-            className="rounded text-xl p-3"
-          >
-            check json
-          </button>
         </div>
       </div>
     </div>
