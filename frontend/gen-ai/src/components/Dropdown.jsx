@@ -12,6 +12,7 @@ const Dropdown = ({setSelectedLanguageMain}) => {
     setSelectedLanguage(language);
     setIsOptionsVisible(false); // Optionally close the dropdown after selection
     setSelectedLanguageMain(selectedLanguage);
+    console.log(selectedLanguage)
   };
 
   return (
@@ -27,10 +28,10 @@ const Dropdown = ({setSelectedLanguageMain}) => {
       
       {isOptionsVisible && (
         <div className="absolute w-48 py-2 mt-2 bg-white rounded-lg shadow-xl z-50">
-          <a onClick={() => handleLanguageSelect('English')} href="#" className="block px-4 py-2 text-gray-800 hover:bg-indigo-500 hover:text-white cursor-pointer">English</a>
-          <a onClick={() => handleLanguageSelect('Hindi')} href="#" className="block px-4 py-2 text-gray-800 hover:bg-indigo-500 hover:text-white cursor-pointer">Hindi</a>
-          <a onClick={() => handleLanguageSelect('Marathi')} href="#" className="block px-4 py-2 text-gray-800 hover:bg-indigo-500 hover:text-white cursor-pointer">Marathi</a>
-          <a onClick={() => handleLanguageSelect('Tamil')} href="#" className="block px-4 py-2 text-gray-800 hover:bg-indigo-500 hover:text-white cursor-pointer">Tamil</a>
+          <a onClick={() => handleLanguageSelect('english')} href="#" className="block px-4 py-2 text-gray-800 hover:bg-indigo-500 hover:text-white cursor-pointer">English</a>
+          <a onClick={() => handleLanguageSelect('hindi')} href="#" className="block px-4 py-2 text-gray-800 hover:bg-indigo-500 hover:text-white cursor-pointer">Hindi</a>
+          <a onClick={() => handleLanguageSelect('marathi')} href="#" className="block px-4 py-2 text-gray-800 hover:bg-indigo-500 hover:text-white cursor-pointer">Marathi</a>
+          <a onClick={() => handleLanguageSelect('tamil')} href="#" className="block px-4 py-2 text-gray-800 hover:bg-indigo-500 hover:text-white cursor-pointer">Tamil</a>
         </div>
       )}
     </div>

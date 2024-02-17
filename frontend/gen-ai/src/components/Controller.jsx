@@ -89,7 +89,7 @@ const Controller = () => {
                 {messages.length == 0 && !isLoading && (
                     <div className='flex flex-col items-center'>
                     <div className='text-center font-light italic mt-10'>send john a message...</div>
-                    <Dropdown setSelectedLanguageMain={setSelectedLanguage} />
+                    {/* <Dropdown setSelectedLanguageMain={setSelectedLanguage} /> */}
                     </div>
                 )}
                 {isLoading && (
