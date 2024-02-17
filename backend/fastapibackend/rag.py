@@ -149,9 +149,11 @@ def get_mcq(topic, number):
             {"role": "user", "content": f"{docs}\n Generate one mcq questions from the above context. Don't repeat these questions: \n{questions}"}
         ]
         )
-        questions.append(response.choices[0].message.content)  
+        questions.append(response.choices[0].message.content)
+    print(questions)      
     json_responses = [json.loads(response) for response in questions]
     fin2 = json.dumps(json_responses, indent=4)
     parsed_json = json.loads(fin2)
     minimized_json_string = json.dumps(parsed_json, separators=(',', ':'))
+    print(minimized_json_string)
     return minimized_json_string     

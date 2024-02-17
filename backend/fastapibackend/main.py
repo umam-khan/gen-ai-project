@@ -91,7 +91,7 @@ def mp3_to_text_english(data):
         language="en",
         response_format="text"
     )
-    print(f"This is MP3 Hindi:\n\n{transcript}")
+    print(f"This is MP3 English:\n\n{transcript}")
     return transcript
 
 
@@ -182,7 +182,7 @@ def tamil_to_english(english_text):
 
 
 @app.post("/getaudio/")
-async def get_audio(language: str = Form(...), audio: UploadFile = File(...)):
+async def get_audio(audio: UploadFile = File(...), language: str = Form(...)):
     try:
         # Save the uploaded audio file
         with open(audio.filename, "wb") as buffer:
@@ -221,7 +221,7 @@ async def get_audio(language: str = Form(...), audio: UploadFile = File(...)):
                     yield from audio_file
                 os.remove(tts_tam)
             return StreamingResponse(iterfile(),media_type="application/octet-stream")
-        else:
+        elif language == 'english':
             stt_eng = mp3_to_text_english(audio_input)
             text_query_pdf = starting_point(stt_eng)
             tts_eng = english_text_to_mp3(text_query_pdf)
