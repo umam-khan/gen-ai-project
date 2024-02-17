@@ -7,6 +7,7 @@ from langchain.document_loaders import PyPDFLoader
 from openai import OpenAI
 from dotenv import load_dotenv
 import os
+import json
 load_dotenv()
 
 from langchain.schema import (
@@ -149,5 +150,8 @@ def get_mcq(topic, number):
         ]
         )
         questions.append(response.choices[0].message.content)  
-    print(questions)
-    return questions      
+    json_responses = [json.loads(response) for response in questions]
+    fin2 = json.dumps(json_responses, indent=4)
+    parsed_json = json.loads(fin2)
+    minimized_json_string = json.dumps(parsed_json, separators=(',', ':'))
+    return minimized_json_string     
