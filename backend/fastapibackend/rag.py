@@ -7,8 +7,9 @@ from langchain.document_loaders import PyPDFLoader
 from openai import OpenAI
 from dotenv import load_dotenv
 import os
-import json
+from langchain_community.document_loaders import WebBaseLoader
 load_dotenv()
+import json
 
 from langchain.schema import (
     SystemMessage,
@@ -43,14 +44,7 @@ text_field = "text"
 vectorstore = Pinecone(index, embed_model.embed_query,text_field)
 
 
-# Get the directory of the current script
-current_script_dir = os.path.dirname(os.path.abspath(__file__))
-
-# Construct the path to the 'data' folder relative to the current script
-data_directory_path = os.path.join(current_script_dir, 'data')
-
-# Construct the path to 'data.pdf' within the 'data' folder
-dir_path = os.path.join(data_directory_path, 'data.pdf')
+dir_path = "C:\\Users\\Anand\\Desktop\\OPENAI\\data\\data.pdf"
 
 
 def get_pdf_text(dir_path):
@@ -79,10 +73,14 @@ def process_pinecone():
 
 
 def augment_prompt(query):
-    results = vectorstore.similarity_search(query,k=3)
+    if len(message)>2:
+        results = vectorstore.similarity_search(str(message[-1])+'\n'+query,k=3)
+    else:
+        results = vectorstore.similarity_search(query,k=3)
     source_knowledge = "\n".join([x.page_content for x in results])
 
-    augemented_prompt = f"""Using the contexts below, answer the query.
+    augemented_prompt = f"""Using the contexts below, answer the query. Also you are provided with previous conversations of the 
+    system with the user. Refer to this conversation and understand what the user is asking for making you a conversational bot.
 
     Context:
     {source_knowledge}
@@ -100,6 +98,7 @@ def starting_point(question):
     message.append(prompt)
     res = chat(message[-4:])
     message.append(res)
+    print(type(message[-1]))
     return res.content
 
 def reset_the_pinecone():
@@ -146,14 +145,22 @@ def get_mcq(topic, number):
         messages=[
             {"role": "system", "content": "You are a helpful assistant designed to output JSON."},
             {"role": "system", "content": "Always follow this format (questions : Question generated, answer : correct answer, option1: wrong option , option2 : wrong option, option3: wrong).\n"},
-            {"role": "user", "content": f"{docs}\n Generate one mcq questions from the above context. Don't repeat these questions: \n{questions}"}
+            {"role": "user", "content": f"{docs}\n Generate one mcq questions from the above context. Don't repeat these questions: \n{questions}\n Keep in mind that the generated options should"}
         ]
         )
-        questions.append(response.choices[0].message.content)
-    print(questions)      
+        questions.append(response.choices[0].message.content)  
+    print(questions)
     json_responses = [json.loads(response) for response in questions]
     fin2 = json.dumps(json_responses, indent=4)
     parsed_json = json.loads(fin2)
     minimized_json_string = json.dumps(parsed_json, separators=(',', ':'))
     print(minimized_json_string)
-    return minimized_json_string     
+    return minimized_json_string           
+
+def process_pinecone_url(url):
+    loader = WebBaseLoader(url)
+    data = loader.load()
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
+    texts = text_splitter.split_documents(data)
+    embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY, model="text-embedding-ada-002")
+    docsearch = Pinecone.from_texts([t.page_content for t in texts], embeddings, index_name=index_name)

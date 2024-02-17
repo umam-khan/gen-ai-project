@@ -8,6 +8,7 @@ from openai import OpenAI
 from rag import *
 from tempfile import NamedTemporaryFile
 from dotenv import load_dotenv
+import json
 
 load_dotenv()
 
@@ -267,11 +268,24 @@ async def get_text(text: str = Form(...), language: str = Form(...)):
 async def mcq(topic: str = Form(...), number: int  = Form(...)):
     try:
         result = get_mcq(topic,number)
-        return JSONResponse(result,status_code=200)
+        data = json.loads(result)
+        formatted=[]
+        for question_ob in data:
+            question = question_ob["question"]
+            answer = question_ob["answer"]
+            options = [question_ob["option1"],question_ob["option2"],question_ob["option3"]]
+            formatted_question={
+                "question":question,
+                "answer":answer,
+                "options":options
+            }
+            formatted.append(formatted_question)
+        return JSONResponse(formatted,status_code=200)
     except Exception as e:
         print(f"Error: {str(e)}")
         return JSONResponse(content={"success": False, "message": "Cen' generate these many MCQs"}, status_code=500)
-    
+
+
 
 @app.post("/getviva/")
 async def viva(topic: str = Form(...)):
@@ -281,7 +295,17 @@ async def viva(topic: str = Form(...)):
     except Exception as e:
         print(f"Error: {str(e)}")
         return JSONResponse(content={"success": False, "message": "Cen' generate these many MCQs"}, status_code=500)
-    
+
+@app.post("/geturl/")
+async def url(url: str = Form(...)):
+    try:
+        result = process_pinecone_url(url)
+        return JSONResponse(result,status_code=200)
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return JSONResponse(content={"success": False, "message": "Cen' generate these many MCQs"}, status_code=500)
+
+
 @app.post("/getsummary/")
 async def summary(topic: str = Form(...)):
     try:
