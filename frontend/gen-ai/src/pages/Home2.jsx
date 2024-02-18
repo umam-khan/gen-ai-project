@@ -54,39 +54,6 @@ function Home2() {
           </div>
         </div>
       </div>
-
-      {/* <div className="px-5 sm:px-10 md:px-20 lg:px-10 xl:px-20 py-8 bg-gray-100" id="cards">
-        <h3 className="leading-none font-black text-3xl mb-6">Popular Designers</h3>
-        <div className="flex flex-wrap -mx-4">
-          <div className="w-full md:w-1/2 lg:w-1/3 px-4 mb-6">
-            <div className="bg-gray-100 rounded shadow-lg">
-              <img src="https://images.unsplash.com/photo-1541647376583-8934aaf3448f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=85" alt="Designer" className="w-full h-32 object-cover rounded-t-lg"/>
-              <div className="p-6">
-                <h4 className="font-bold text-xl mb-2">Senior Designer - Figma</h4>
-                <p>Location: New York City | Experience: 3 Years at Google</p>
-              </div>
-            </div>
-          </div>
-          {/* Repeat for other designers
-        </div>
-      </div> */}
-
-      {/* <div className="px-5 sm:px-10 md:px-20 lg:px-10 xl:px-20 py-8 bg-indigo-100" id="blog-posts">
-        <h3 className="leading-none font-black text-3xl mb-6">Popular Posts</h3>
-        <div className="flex flex-wrap -mx-4">
-          <Link to="/blog-post-1" className="w-full md:w-1/2 lg:w-1/3 px-4 mb-6">
-            <div className="bg-gray-100 rounded shadow-lg">
-              <img src="https://images.unsplash.com/3/doctype-hi-res.jpg?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=768&q=80" alt="Blog Post" className="w-full h-48 object-cover rounded-t-lg"/>
-              <div className="p-6">
-                <h5 className="font-bold text-lg">Tips for creating an amazing design system</h5>
-                <p>Learn how to create a new design system that is beautiful and efficient for creating your UI components.</p>
-              </div>
-            </div>
-          </Link>
-          {/* Repeat for other blog posts
-        </div>
-      </div> */}
-
       <footer className="px-5 sm:px-10 md:px-20 py-8">
         <div className="flex flex-col items-center lg:flex-row-reverse justify-between">
           <div>
