@@ -48,14 +48,14 @@ const Controller = () => {
             audio.src = createBlobUrl(blob);
 
             //append to audio
-            const johnMessage = { sender: "john", blobUrl: audio.src };
+            const johnMessage = { sender: "chatbook", blobUrl: audio.src };
 
             messagesArr.push(johnMessage);
             setMessages(messagesArr);
 
             //play audio
             setIsLoading(false);
-            audio.play();
+            // audio.play();
           })
           .catch((err) => {
             console.log(err);
@@ -76,14 +76,14 @@ const Controller = () => {
                 key={index}
                 className={
                   "flex flex-col " +
-                  (audio.sender == "john" && "flex items-end")
+                  (audio.sender == "chatbook" && "flex items-end")
                 }
               >
                 {/* sender */}
                 <div className="mt-4">
                   <p
                     className={
-                      audio.sender == "john"
+                      audio.sender == "chatbook"
                         ? "text-right mr-2 italic text-green-500"
                         : "ml-2 italic text-blue-500"
                     }
@@ -104,7 +104,7 @@ const Controller = () => {
           {messages.length == 0 && !isLoading && (
             <div className="flex flex-col items-center">
               <div className="text-center font-light italic mt-10">
-                send john a message...
+                send chatbook a message...
               </div>
               <Dropdown setSelectedLanguageMain={setSelectedLanguage} />
             </div>
