@@ -9,7 +9,7 @@ const Navbar = () => {
   return (
 <nav className="bg-white border-gray-200 dark:bg-gray-900 sticky top-0 z-20">
   <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-  <Link to="/"><div className="flex items-center space-x-3 rtl:space-x-reverse">
+  <Link to="/home2"><div className="flex items-center space-x-3 rtl:space-x-reverse">
       <img src="https://flowbite.com/docs/images/logo.svg" className="h-8" alt="Flowbite Logo" />
       <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">CHAT-BOOK</span>
   </div>
@@ -46,6 +46,9 @@ const Navbar = () => {
       </li>
       <li>
         <Link to="/main" className="block py-2 px-3 md:p-0 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 d:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Upload</Link>
+      </li>
+      <li>
+        <Link to="/url" className="block py-2 px-3 md:p-0 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 d:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Upload with upload</Link>
       </li>
       <li>
         <Link to="/audio2" className="block py-2 px-3 md:p-0 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">AudioCompanion</Link>

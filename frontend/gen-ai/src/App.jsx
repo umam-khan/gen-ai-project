@@ -12,6 +12,7 @@ import PreMain from "./pages/PreMain";
 import Audiopage2 from "./pages/Audiopage2";
 import Home2 from "./pages/Home2";
 import McqPage from "./pages/McqPage";
+import UrlPage from "./pages/UrlPage";
 
 const App = () => {
   return (
@@ -31,6 +32,7 @@ const App = () => {
           <Route path="/audio2" element={<AuthenticatedWrapper><Audiopage2 /></AuthenticatedWrapper> } />
           <Route path="/home2" element={<AuthenticatedWrapper><Home2 /></AuthenticatedWrapper> } />
           <Route path="/mcq" element={<AuthenticatedWrapper><McqPage /></AuthenticatedWrapper> } />
+          <Route path="/url" element={<AuthenticatedWrapper><UrlPage/> </AuthenticatedWrapper> } />
       </Routes>
     </BrowserRouter>
     </div>
