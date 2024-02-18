@@ -31,13 +31,8 @@ app.add_middleware(
 async def get_pdf(pdf_file: UploadFile = File(...)):
     try:
         if pdf_file:
-            # Get the directory of the current script
             current_script_dir = os.path.dirname(os.path.abspath(__file__))
-
-            # Construct the path to the 'data' folder relative to the current script
             directory_path = os.path.join(current_script_dir, 'data')
-
-            # Check if the 'data' directory exists, create it if it doesn't
             if not os.path.exists(directory_path):
                 os.makedirs(directory_path)
             file_path = os.path.join( directory_path, 'data.pdf')
@@ -183,7 +178,7 @@ def tamil_to_english(english_text):
 
 
 @app.post("/getaudio/")
-async def get_audio(audio: UploadFile = File(...), language: str = Form(...)):
+async def get_audio(language: str = Form(...), audio: UploadFile = File(...)):
     try:
         # Save the uploaded audio file
         with open(audio.filename, "wb") as buffer:
@@ -222,7 +217,7 @@ async def get_audio(audio: UploadFile = File(...), language: str = Form(...)):
                     yield from audio_file
                 os.remove(tts_tam)
             return StreamingResponse(iterfile(),media_type="application/octet-stream")
-        elif language == 'english':
+        else:
             stt_eng = mp3_to_text_english(audio_input)
             text_query_pdf = starting_point(stt_eng)
             tts_eng = english_text_to_mp3(text_query_pdf)
@@ -283,9 +278,7 @@ async def mcq(topic: str = Form(...), number: int  = Form(...)):
         return JSONResponse(formatted,status_code=200)
     except Exception as e:
         print(f"Error: {str(e)}")
-        return JSONResponse(content={"success": False, "message": "Cen' generate these many MCQs"}, status_code=500)
-
-
+        return JSONResponse(content={"success": False, "message": "Can't generate these many MCQs"}, status_code=500)
 
 @app.post("/getviva/")
 async def viva(topic: str = Form(...)):
@@ -294,7 +287,7 @@ async def viva(topic: str = Form(...)):
         return JSONResponse(result,status_code=200)
     except Exception as e:
         print(f"Error: {str(e)}")
-        return JSONResponse(content={"success": False, "message": "Cen' generate these many MCQs"}, status_code=500)
+        return JSONResponse(content={"success": False, "message": "Can't generate viva questions"}, status_code=500)
 
 @app.post("/geturl/")
 async def url(url: str = Form(...)):
@@ -303,7 +296,7 @@ async def url(url: str = Form(...)):
         return JSONResponse(result,status_code=200)
     except Exception as e:
         print(f"Error: {str(e)}")
-        return JSONResponse(content={"success": False, "message": "Cen' generate these many MCQs"}, status_code=500)
+        return JSONResponse(content={"success": False, "message": "Can't store in pinecone"}, status_code=500)
 
 
 @app.post("/getsummary/")
@@ -313,4 +306,4 @@ async def summary(topic: str = Form(...)):
         return JSONResponse(result,status_code=200)
     except Exception as e:
         print(f"Error: {str(e)}")
-        return JSONResponse(content={"success": False, "message": "Cen' generate these many MCQs"}, status_code=500)
+        return JSONResponse(content={"success": False, "message": "Can't generate Summary"}, status_code=500)

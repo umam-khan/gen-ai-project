@@ -44,7 +44,13 @@ text_field = "text"
 vectorstore = Pinecone(index, embed_model.embed_query,text_field)
 
 
-dir_path = "C:\\Users\\Anand\\Desktop\\OPENAI\\data\\data.pdf"
+current_script_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Construct the path to the 'data' folder relative to the current script
+data_directory_path = os.path.join(current_script_dir, 'data')
+
+# Construct the path to 'data.pdf' within the 'data' folder
+dir_path = os.path.join(data_directory_path, 'data.pdf')
 
 
 def get_pdf_text(dir_path):
@@ -98,7 +104,6 @@ def starting_point(question):
     message.append(prompt)
     res = chat(message[-4:])
     message.append(res)
-    print(type(message[-1]))
     return res.content
 
 def reset_the_pinecone():
@@ -115,7 +120,7 @@ def get_summary(question):
             {"role":"system","content":"""You are a helpful educational assistant.
             You would need to generate a concise summary on the context provided to you. Include the following in the summary and generate response in this format only:
             1. Introduction\n, 2. Key Concepts and Theoires\n, 3. Methodology\n, 4. Findings or Main Points\n, 5. Implications or Application\n, 6. Conclusion\n """},
-            {"role":"user","content":f"{docs}\n Generate the summary"}
+            {"role":"user","content":f"{docs}\n Generate the summary of the above"}
         ]
     )
     return (sumary.choices[0].message.content)
@@ -127,9 +132,9 @@ def get_viva(question):
         model="gpt-3.5-turbo",
         messages=[
             {"role":"system","content":"""You are a helpful educational assistant.
-            You would need to generate viva questions and their answers on the context provided to you. Cover all the important points and generate as many questions as. The format of the query should be:\n 
-            Question:\n Answer:"""},
-            {"role":"user","content":f"{docs}\n Generate the viva questions"}
+            You would need to generate viva questions and their answers on the context provided to you. Cover all the important points and generate as many questions as possible. The format of the query should be:\n 
+            Question:\n Answer:\n For Example of format:\nQuestion:What is cloud computing?\nAnswer:Cloud computing is the on-demand availability of computer system resources, especially data storage (cloud storage) and computing power, without direct active management by the user. Large clouds often have functions distributed over multiple locations, each of which is a data center. Cloud computing relies on sharing of resources to achieve coherence and typically uses a pay-as-you-go model, which can help in reducing capital expenses but may also lead to unexpected operating expenses for users"""},
+            {"role":"user","content":f"{docs}\n Generate the viva questions from the above"}
         ]
     )
     return (viva.choices[0].message.content)
@@ -144,8 +149,8 @@ def get_mcq(topic, number):
         response_format={ "type": "json_object" },
         messages=[
             {"role": "system", "content": "You are a helpful assistant designed to output JSON."},
-            {"role": "system", "content": "Always follow this format (questions : Question generated, answer : correct answer, option1: wrong option , option2 : wrong option, option3: wrong).\n"},
-            {"role": "user", "content": f"{docs}\n Generate one mcq questions from the above context. Don't repeat these questions: \n{questions}\n Keep in mind that the generated options should"}
+            {"role": "system", "content": "Always follow this format (questions : Question generated, answer : correct answer, option1: wrong option , option2 : wrong option, option3: wrong options).\n"},
+            {"role": "user", "content": f"{docs}\n Generate one mcq questions from the above context. Don't repeat these questions: \n{questions}\n Keep in mind that the generated options should not be more than 15 words. The difficulty of questions hould be moderate."}
         ]
         )
         questions.append(response.choices[0].message.content)  
@@ -155,7 +160,7 @@ def get_mcq(topic, number):
     parsed_json = json.loads(fin2)
     minimized_json_string = json.dumps(parsed_json, separators=(',', ':'))
     print(minimized_json_string)
-    return minimized_json_string           
+    return minimized_json_string                 
 
 def process_pinecone_url(url):
     loader = WebBaseLoader(url)
