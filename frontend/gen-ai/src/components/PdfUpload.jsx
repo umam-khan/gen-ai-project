@@ -12,7 +12,7 @@ const PdfUpload = ({ onUploadStart, onUploadSuccess }) => {
     if (selectedFile) {
       onUploadStart(); // Notify parent component that upload has started
       const formData = new FormData();
-      formData.append('pdf', selectedFile);
+      formData.append('pdf_file', selectedFile);
 
       try {
         const response = await fetch('http://localhost:8000/getpdf', {
