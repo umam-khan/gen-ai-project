@@ -1,43 +1,44 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
-const SummaryPage = () => {
-  const [vivaData, setVivaData] = useState({ hindi: '', english: '' }); // State to store fetched data
-  const [isLoading, setIsLoading] = useState(true); // State to handle loading status
+const VivaPage = () => {
+  const [topic, setTopic] = useState(''); // State for the user-entered topic
+  const [vivaData, setVivaData] = useState(); // State to store fetched data
+  const [isLoading, setIsLoading] = useState(false); // Initially not loading
   const [error, setError] = useState(null); // State to handle any errors
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Assuming your Flask backend expects a POST request
-        const response = await fetch('http://localhost:8000/getsummary', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          // If your POST request requires a body, add it here
-          // body: JSON.stringify({ someKey: 'someValue' }),
-        });
-
-        if (!response.ok) {
-          throw new Error('Something went wrong'); // Throw an error if response is not ok
-        }
-
-        const data = await response.json(); // Parse JSON response
-
-        if (data.success) {
-          setVivaData({ hindi: data.hindi, english: data.english }); // Update state with fetched data
-        } else {
-          setError(data.message || 'Failed to fetch data'); // Set error message if success is false
-        }
-      } catch (error) {
-        setError(error.message); // Catch and set any errors that occur during fetch
-      } finally {
-        setIsLoading(false); // Ensure loading is set to false after fetch operation is complete
+  const fetchVivaQuestions = async (event) => {
+    event.preventDefault(); // Prevent form from submitting traditionally
+    setIsLoading(true); // Set loading to true while fetching data
+    setError(null); // Reset error state
+  
+    // Create FormData and append the topic
+    const formData = new FormData();
+    formData.append('topic', topic);
+  
+    try {
+      const response = await fetch('http://localhost:8000/getsummary/', {
+        method: 'POST',
+        // Remove the 'Content-Type': 'application/json', header
+        body: formData, // Send the FormData
+      });
+  
+      if (!response.ok) {
+        throw new Error('Something went wrong'); // Throw an error if response is not ok
       }
-    };
-
-    fetchData(); // Call the async function to fetch data
-  }, []); // Empty dependency array means this effect runs once on mount
+  
+      const data = await response.json(); // Parse JSON response
+      console.log(data)
+      if (data) {
+        setVivaData(data); // Update state with fetched data
+      } else {
+        setError(data.message || 'Failed to fetch data'); // Set error message if success is false
+      }
+    } catch (error) {
+      setError(error.message); // Catch and set any errors that occur during fetch
+    } finally {
+      setIsLoading(false); // Ensure loading is set to false after fetch operation is complete
+    }
+  };
 
   return (
     <div className="flex h-screen w-screen">
@@ -49,6 +50,23 @@ const SummaryPage = () => {
       {/* Chat Container */}
       <div className="flex flex-col flex-1">
         <div className="overflow-y-auto p-4 space-y-4 bg-gray-100 flex-1">
+          {/* Topic Form */}
+          <form onSubmit={fetchVivaQuestions} className="flex space-x-4 mb-4">
+            <input
+              type="text"
+              value={topic}
+              onChange={(e) => setTopic(e.target.value)}
+              placeholder="Enter Topic"
+              className="flex-1 px-4 py-2 rounded border border-gray-300"
+            />
+            <button
+              type="submit"
+              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            >
+              Fetch summary
+            </button>
+          </form>
+
           {/* Check for loading state */}
           {isLoading && <div>Loading...</div>}
 
@@ -56,17 +74,18 @@ const SummaryPage = () => {
           {error && <div>Error: {error}</div>}
 
           {/* Display the data if available and not loading */}
-          {!isLoading && !error && (
-            <div className="text-left">
-              <div className="inline-block bg-gray-300 rounded px-4 py-2">
-                <pre><strong>English:</strong> {vivaData.english}</pre>
-              </div>
-            </div>
-          )}
+          {!isLoading && !error && vivaData && (
+  <div className="text-left">
+    <div className="inline-block bg-gray-300 rounded px-4 py-2 overflow-hidden">
+      {/* Add whitespace-pre-wrap to allow content to wrap */}
+      <pre className="whitespace-pre-wrap"><strong>Summary:</strong> {vivaData}</pre>
+    </div>
+  </div>
+)}
         </div>
       </div>
     </div>
   );
 };
 
-export default SummaryPage;
+export default VivaPage;
