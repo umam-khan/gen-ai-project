@@ -104,7 +104,7 @@ const Controller = () => {
           {messages.length == 0 && !isLoading && (
             <div className="flex flex-col items-center">
               <div className="text-center font-light italic mt-10">
-                send chatbook a message...
+                send message to the buyer..
               </div>
               <Dropdown setSelectedLanguageMain={setSelectedLanguage} />
             </div>

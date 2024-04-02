@@ -13,6 +13,7 @@ import Audiopage2 from "./pages/Audiopage2";
 import Home2 from "./pages/Home2";
 import McqPage from "./pages/McqPage";
 import UrlPage from "./pages/UrlPage";
+import BhashiniPage from "./pages/BhashiniPage";
 
 const App = () => {
   return (
@@ -23,7 +24,8 @@ const App = () => {
           <Route path="/main" element={<AuthenticatedWrapper>
                 <MainPage />
               </AuthenticatedWrapper>} />
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Home2 />} />
+          <Route path="/bhashini" element={<BhashiniPage />} />
           <Route path="/text" element={<AuthenticatedWrapper><TextPage /></AuthenticatedWrapper>} />
           <Route path="/audio" element={<AuthenticatedWrapper><AudioPage /></AuthenticatedWrapper>} />
           <Route path="/viva" element={<AuthenticatedWrapper><VivaPage /></AuthenticatedWrapper> } />
