@@ -11,7 +11,7 @@ const Navbar = () => {
   <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
   <Link to="/home2"><div className="flex items-center space-x-3 rtl:space-x-reverse">
       <img src="https://flowbite.com/docs/images/logo.svg" className="h-8" alt="Flowbite Logo" />
-      <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">CHAT-BOOK</span>
+      <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">MULTILINGO</span>
   </div>
   </Link>
   <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
@@ -38,12 +38,17 @@ const Navbar = () => {
   </div>
   <div className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-cta">
     <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-      <li>
+    <li>
         <Link to="/home2" className="block py-2 px-3 md:p-0 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 d:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700" >Home</Link>
       </li>
       <li>
-        <Link to="/premain" className="block py-2 px-3 md:p-0 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Query</Link>
+        <Link to="/bhashini" className="block py-2 px-3 md:p-0 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 d:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700" >Bhashini</Link>
       </li>
+      
+      {/* <li>
+        <Link to="/premain" className="block py-2 px-3 md:p-0 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Query</Link>
+      </li> */}
+      
       <li>
         <Link to="/main" className="block py-2 px-3 md:p-0 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 d:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Upload</Link>
       </li>
@@ -51,11 +56,14 @@ const Navbar = () => {
         <Link to="/url" className="block py-2 px-3 md:p-0 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 d:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Upload with url</Link>
       </li>
       <li>
-        <Link to="/audio2" className="block py-2 px-3 md:p-0 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">AudioCompanion</Link>
+        <Link to="/text" className="block py-2 px-3 md:p-0 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">TextHelp</Link>
       </li>
       <li>
+        <Link to="/audio2" className="block py-2 px-3 md:p-0 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">AudioCompanion</Link>
+      </li>
+      {/* <li>
     <a href="http://localhost:3000/mcqquiz" className="block py-2 px-3 md:p-0 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent" target="_blank" rel="noopener noreferrer">MCQ Quiz</a>
-  </li>
+  </li> */}
     </ul>
   </div>
   </div>

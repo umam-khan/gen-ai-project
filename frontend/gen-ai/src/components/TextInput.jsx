@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 
-const TextInput = ({ updateTextValue }) => {
+const TextInput = ({ updateTextValue, setIsLoading }) => {
   const [text, setText] = useState("");
   const [selectedLanguage, setSelectedLanguage] = useState("english");
 
   const sendTextInputToServer = async () => {
+    setIsLoading(true);
     const formData = new FormData();
     formData.append("text", text);
     formData.append("language", selectedLanguage);
@@ -28,6 +29,9 @@ const TextInput = ({ updateTextValue }) => {
       }
     } catch (error) {
       console.error("Error sending data to server:", error);
+    }
+    finally{
+      setIsLoading(false)
     }
   };
 

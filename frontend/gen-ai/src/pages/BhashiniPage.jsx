@@ -4,7 +4,7 @@ import botimg from "../assets/bot1@2x.png"
 import vector from "../assets/Vector.svg"
 const MainHomeInterface = () => {
     return (
-      <div className="w-full relative flex flex-row items-start justify-start tracking-[normal]">
+      <div className="w-full relative flex flex-row items-start justify-start tracking-[normal] overflow-x-hidden">
         <main className="flex-1 bg-white overflow-hidden flex flex-col items-start justify-start pt-[15px] px-[26px] pb-[130px] box-border relative gap-[125px] max-w-full text-left text-[24px] text-white font-inter mq450:gap-[31px_125px] mq450:pb-[55px] mq450:box-border mq1050:gap-[62px_125px] mq1050:pt-5 mq1050:pb-[84px] mq1050:box-border">
           {/* <div className="relative font-light inline-block min-w-[80px] z-[1] mq450:text-[19px]">
             v English
